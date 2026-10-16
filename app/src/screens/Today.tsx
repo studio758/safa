@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Animated, Pressable, Text, View, type ScrollViewInstance } from 'react-native';
+import { Animated, Pressable, Text, View } from 'react-native';
 import { BlendHero, FlatTile, PracticeItem, ReflectPrompt, ShapesList } from '../ds/almanac';
 import { Button } from '../ds/Button';
 import { Eyebrow, Tag } from '../ds/display';
@@ -11,7 +11,7 @@ import { dayTypeLabel } from '../data/engine';
 import { useTween } from '../lib/useTween';
 import { useSafa } from '../state/SafaState';
 import { color, radius, type, wrap } from '../theme/tokens';
-import { ListRow, Scroller, card } from './shared';
+import { ListRow, Scroller, card, type ScrollViewInstance } from './shared';
 
 export function Today() {
   const { state: s, day, prevDay, nextDay, goToday, toggleSave, openObs, openGreet, togglePractice, openJournal, openLearn } = useSafa();

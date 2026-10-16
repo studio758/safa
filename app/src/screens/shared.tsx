@@ -1,9 +1,12 @@
-import { forwardRef, type ReactNode } from 'react';
-import { Pressable, ScrollView, Text, View, type ScrollViewInstance, type StyleProp, type ViewStyle } from 'react-native';
+import { forwardRef, type ComponentRef, type ReactNode } from 'react';
+import { Pressable, ScrollView, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import type { PressState } from '../ds/Button';
 import { Icon } from '../ds/Icon';
 import { IconBadge } from '../ds/almanac';
 import { color, font, radius, type } from '../theme/tokens';
+
+/** Ref type for a Scroller; React Native 0.86 no longer exports this name. */
+export type ScrollViewInstance = ComponentRef<typeof ScrollView>;
 
 /** Vertical scroller with hidden indicators — the prototype's `.safa-scroll`. */
 export const Scroller = forwardRef<ScrollViewInstance, { children: ReactNode; contentStyle?: StyleProp<ViewStyle> }>(function Scroller(

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Animated, Pressable, StyleSheet, Text, View, type ScrollViewInstance } from 'react-native';
+import { Animated, Pressable, StyleSheet, Text, View } from 'react-native';
 import { FlatTile, PracticeItem } from '../ds/almanac';
 import { Button } from '../ds/Button';
 import { Eyebrow, Tag } from '../ds/display';
@@ -12,6 +12,7 @@ import { eventTypeLabel, flatForEvent, greetingModeFor, isFestive, isSolemn, pra
 import { useTween } from '../lib/useTween';
 import { useSafa } from '../state/SafaState';
 import { color, font, motion, radius, type, wrap } from '../theme/tokens';
+import type { ScrollViewInstance } from './shared';
 import { Scroller, card } from './shared';
 
 /** Full-screen page that slides in from the right (520ms, settle easing). */
