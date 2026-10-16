@@ -1,0 +1,4 @@
+html,body{background:var(--bg-canvas);color:var(--text-body);font-family:var(--font-sans);-webkit-font-smoothing:antialiased;}
+a{color:var(--text-accent-strong);text-decoration:underline;text-decoration-color:var(--terracotta-300);text-underline-offset:3px;}
+a:hover{color:var(--terracotta-600);text-decoration-color:currentColor;}
+::selection{background:var(--sage-100);color:var(--charcoal-900);}

@@ -1,0 +1,27 @@
+:root{
+--font-display:'Playfair Display',Georgia,'Times New Roman',serif;
+--font-serif:'Noto Serif',Georgia,serif;
+--font-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+
+--fw-light:300;/* @kind font */--fw-regular:400;/* @kind font */--fw-medium:500;/* @kind font */--fw-semibold:600;/* @kind font */--fw-bold:700;/* @kind font */
+
+/* Product (mobile) scale */
+--fs-display:40px;--fs-h1:32px;--fs-h2:24px;--fs-h3:20px;--fs-lead:18px;--fs-body:16px;--fs-small:14px;--fs-caption:12px;--fs-eyebrow:11px;
+--lh-tight:1.15;/* @kind font */--lh-snug:1.3;/* @kind font */--lh-body:1.6;/* @kind font */--lh-loose:1.75;/* @kind font */
+--ls-display:-0.01em;/* @kind font */--ls-eyebrow:0.14em;/* @kind font */
+
+/* Presentation (1280×720) scale, as measured in the decks */
+--fs-slide-hero:88px;--fs-slide-title:44px;--fs-slide-sub:26px;--fs-slide-quote:30px;--fs-slide-body:18px;--fs-slide-label:14px;
+
+/* Semantic roles */
+--type-display:var(--fw-medium) var(--fs-display)/var(--lh-tight) var(--font-display);
+--type-h1:var(--fw-medium) var(--fs-h1)/var(--lh-tight) var(--font-display);
+--type-h2:var(--fw-medium) var(--fs-h2)/var(--lh-snug) var(--font-display);
+--type-h3:var(--fw-medium) var(--fs-h3)/var(--lh-snug) var(--font-display);
+--type-blend:italic var(--fw-regular) var(--fs-lead)/var(--lh-loose) var(--font-serif);
+--type-body:var(--fw-regular) var(--fs-body)/var(--lh-body) var(--font-sans);
+--type-small:var(--fw-regular) var(--fs-small)/var(--lh-body) var(--font-sans);
+--type-label:var(--fw-medium) var(--fs-small)/1.3 var(--font-sans);
+--type-caption:var(--fw-regular) var(--fs-caption)/1.4 var(--font-sans);
+--type-eyebrow:var(--fw-medium) var(--fs-eyebrow)/1.2 var(--font-sans);
+}

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/tokens/fonts.css">
+<link rel="stylesheet" href="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/tokens/icons.css">
+<link rel="stylesheet" href="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/tokens/colors.css">
+<link rel="stylesheet" href="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/tokens/typography.css">
+<link rel="stylesheet" href="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/tokens/spacing.css">
+<link rel="stylesheet" href="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/tokens/base.css">
+<link rel="stylesheet" href="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/styles.css">
+<script src="_ds/safa-design-system-a782c7ef-2e58-4779-a934-40f04556531d/_ds_bundle.js"></script>
+<style>body{margin:0;background:#E8E4DA;font-family:'Inter',system-ui,sans-serif}a{color:var(--sage-700)}a:hover{color:var(--sage-800)}.safa-scroll::-webkit-scrollbar{display:none}</style>
+</helmet>
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 16px;box-sizing:border-box">
+<div data-screen-label="Safa phone" style="position:relative;width:390px;height:844px;flex:none;border-radius:54px;background:#2B2A27;padding:11px;box-shadow:0 30px 60px rgba(43,42,39,.18)">
+<div style="position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:var(--bg-canvas);display:flex;flex-direction:column">
+
+<div style="flex:none;height:50px;display:flex;align-items:center;justify-content:space-between;padding:0 30px 0 36px;font:600 15px/1 var(--font-sans);color:var(--text-heading);position:relative;z-index:80;background:var(--bg-canvas)">
+<span>9:41</span>
+<div style="position:absolute;left:50%;top:11px;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#111"></div>
+<div style="display:flex;gap:6px;align-items:center;font-size:13px"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full" style="font-size:16px"></i></div>
+</div>
+
+<sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Onboarding" style="position:relative;flex:1;overflow:hidden">
+<div style="position:absolute;top:18px;left:28px;right:28px;z-index:2">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.JourneySteps" steps="{{ journey }}" current="{{ step }}" hint-size="100%,14px"></x-import>
+</div>
+<div style="position:absolute;inset:0;padding:60px 28px 44px;display:flex;flex-direction:column;align-items:center;text-align:center;transition:opacity 480ms cubic-bezier(.22,.61,.36,1), transform 480ms cubic-bezier(.22,.61,.36,1);opacity:{{ ob0.o }};transform:{{ ob0.t }};pointer-events:{{ ob0.pe }}">
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Wordmark" size="{{ 48 }}" tagline="{{ true }}" hint-size="113px,80px"></x-import>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.PullQuote" size="{{ 19 }}" attribution="The Safa Promise" hint-size="100%,180px">We are not here to change what you believe. We are here to share the beauty of how the world observes time.</x-import>
+</div>
+<div style="width:100%;display:flex;flex-direction:column;gap:14px;align-items:center">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" size="lg" full-width="{{ true }}" on-click="{{ next }}" hint-size="100%,52px">Begin</x-import>
+<span style="font:var(--type-caption);color:var(--text-muted)">No religious affiliation or personal data required.</span>
+</div>
+</div>
+<div style="position:absolute;inset:0;padding:60px 28px 44px;display:flex;flex-direction:column;transition:opacity 480ms cubic-bezier(.22,.61,.36,1), transform 480ms cubic-bezier(.22,.61,.36,1);opacity:{{ ob1.o }};transform:{{ ob1.t }};pointer-events:{{ ob1.pe }}">
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" hint-size="100px,14px">Hemisphere</x-import>
+<h1 style="margin:0;font:var(--type-h1);color:var(--text-heading);text-wrap:balance">Where are you living through the seasons?</h1>
+<p style="margin:0 0 8px;font:var(--type-body);color:var(--text-body)">One question, so autumn arrives for you when it actually arrives.</p>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.SegmentedControl" options="{{ hemiOptions }}" value="{{ hemi }}" on-change="{{ setHemi }}" hint-size="100%,48px"></x-import>
+</div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" size="lg" full-width="{{ true }}" on-click="{{ next }}" hint-size="100%,52px">Continue</x-import>
+</div>
+<div style="position:absolute;inset:0;padding:60px 28px 44px;display:flex;flex-direction:column;transition:opacity 480ms cubic-bezier(.22,.61,.36,1), transform 480ms cubic-bezier(.22,.61,.36,1);opacity:{{ ob2.o }};transform:{{ ob2.t }};pointer-events:{{ ob2.pe }}">
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:18px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" hint-size="100px,14px">Notification</x-import>
+<h1 style="margin:0;font:var(--type-h1);color:var(--text-heading);text-wrap:balance">A single, silent ping each morning.</h1>
+<p style="margin:0 0 8px;font:var(--type-body);color:var(--text-body)">Just enough to anchor the start of your day. Nothing more.</p>
+<div style="background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 18px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Toggle" checked="{{ remind }}" on-change="{{ setRemind }}" label="Morning reminder" description="7:00 · silent" hint-size="100%,44px"></x-import>
+</div>
+</div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" size="lg" full-width="{{ true }}" on-click="{{ next }}" hint-size="100%,52px">See today</x-import>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ true }}">
+<div style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column">
+
+<sc-if value="{{ tabToday }}" hint-placeholder-val="{{ true }}">
+<div data-screen-label="Today" style="flex:1;min-height:0;display:flex;flex-direction:column">
+<div style="flex:none;height:52px;display:flex;align-items:center;justify-content:space-between;padding:0 12px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.IconButton" icon="chevron-left" label="Previous day" on-click="{{ prevDay }}" hint-size="44px,44px"></x-import>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Wordmark" size="{{ 18 }}" hint-size="42px,18px"></x-import>
+<div style="display:flex;gap:2px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.IconButton" icon="bookmark" label="Save this day" active="{{ isSaved }}" on-click="{{ toggleSave }}" hint-size="44px,44px"></x-import>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.IconButton" icon="chevron-right" label="Next day" on-click="{{ nextDay }}" hint-size="44px,44px"></x-import>
+</div>
+</div>
+<div class="safa-scroll" ref="{{ scrollRef }}" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:8px 24px 120px">
+<div style="display:flex;flex-direction:column;transition:opacity 320ms cubic-bezier(.22,.61,.36,1), transform 320ms cubic-bezier(.22,.61,.36,1);opacity:{{ fadeO }};transform:{{ fadeT }}">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Tag" tone="{{ day.tone }}" hint-size="80px,28px">{{ day.type }}</x-import>
+<span style="font:var(--type-caption);color:var(--text-muted)">{{ dayRelative }}</span>
+</div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.BlendHero" date="{{ day.date }}" theme="{{ day.theme }}" blend="{{ day.blend }}" image="{{ day.image }}" cues="{{ day.cues }}" hint-size="100%,460px"></x-import>
+
+<sc-if value="{{ dayObs }}" hint-placeholder-val="{{ false }}">
+<button onClick="{{ openDayObs }}" style="margin-top:28px;display:flex;align-items:center;gap:14px;padding:16px 18px;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:10px;text-align:left;cursor:pointer;font:inherit" style-hover="background:var(--surface-muted)">
+<span style="flex:none;width:36px;height:36px;border-radius:50%;background:var(--terracotta-50);display:flex;align-items:center;justify-content:center"><i class="fa-solid fa-star" style="font-size:14px;color:var(--terracotta-500)"></i></span>
+<span style="flex:1;display:flex;flex-direction:column;gap:3px">
+<span style="font:500 15px/1.3 var(--font-sans);color:var(--text-heading)">{{ dayObs.title }}</span>
+<span style="font:var(--type-caption);color:var(--text-muted)">Meaning, customs and etiquette</span>
+</span>
+<i class="fa-solid fa-chevron-right" style="font-size:12px;color:var(--stone-500)"></i>
+</button>
+</sc-if>
+
+<div style="height:40px"></div>
+<div style="margin-bottom:6px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" hint-size="140px,14px">What Shapes Today</x-import></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.ShapesList" items="{{ day.shapes }}" hint-size="100%,200px"></x-import>
+
+<div style="height:36px"></div>
+<div style="margin-bottom:14px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="sage" hint-size="100px,14px">Nature Now</x-import></div>
+<div style="border-radius:14px;overflow:hidden;background:var(--surface-sage);border:1px solid var(--sage-100)">
+<div style="height:128px;background-size:cover;background-position:center;background-image:{{ natureBg }}"></div>
+<div style="padding:18px 20px 20px;display:flex;flex-direction:column;gap:6px">
+<div style="font:var(--type-h3);color:var(--text-heading)">{{ day.nature.title }}</div>
+<div style="font:var(--type-small);color:var(--text-body)">{{ day.nature.text }}</div>
+</div>
+</div>
+
+<div style="height:36px"></div>
+<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:14px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" hint-size="110px,14px">Practice Today</x-import>
+<span style="font:var(--type-caption);color:var(--text-muted)">{{ doneLabel }}</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ practiceItems }}" as="p" hint-placeholder-count="3">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.PracticeItem" title="{{ p.title }}" category="{{ p.category }}" duration="{{ p.duration }}" done="{{ p.done }}" on-toggle="{{ p.onToggle }}" hint-size="100%,72px"></x-import>
+</sc-for>
+</div>
+
+<div style="height:36px"></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.ReflectPrompt" prompt="{{ day.reflect }}" action="Write in your journal" on-action="{{ openJournal }}" hint-size="100%,170px"></x-import>
+<div style="height:24px"></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" variant="secondary" full-width="{{ true }}" icon="book-open" on-click="{{ openLearn }}" hint-size="100%,44px">Learn more</x-import>
+</div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabAlmanac }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Almanac" class="safa-scroll" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:12px 24px 120px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="muted" hint-size="80px,14px">October 2026</x-import>
+<h1 style="margin:8px 0 22px;font:var(--type-h1);color:var(--text-heading)">Almanac</h1>
+<div style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;padding:10px 6px;background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:10px">
+<sc-for list="{{ week }}" as="w" hint-placeholder-count="7">
+<button onClick="{{ w.onClick }}" style="display:flex;flex-direction:column;align-items:center;gap:6px;padding:8px 0;border:none;border-radius:999px;cursor:pointer;font:inherit;background:{{ w.bg }};color:{{ w.fg }}">
+<span style="font:500 10px/1 var(--font-sans);letter-spacing:.08em;text-transform:uppercase;opacity:.75">{{ w.dow }}</span>
+<span style="font:500 17px/1 var(--font-display)">{{ w.num }}</span>
+<span style="width:5px;height:5px;border-radius:50%;background:{{ w.dot }}"></span>
+</button>
+</sc-for>
+</div>
+<div style="height:32px"></div>
+<div style="margin-bottom:4px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" hint-size="100px,14px">Coming Up</x-import></div>
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ almanac }}" as="a" hint-placeholder-count="6">
+<button onClick="{{ a.onClick }}" style="display:flex;gap:14px;align-items:center;padding:14px 0;border:none;border-bottom:1px solid var(--border-subtle);background:none;text-align:left;font:inherit;cursor:{{ a.cursor }}">
+<span style="flex:none;width:52px;font:var(--type-caption);color:var(--text-muted)">{{ a.date }}</span>
+<span style="flex:none;width:36px;height:36px;border-radius:50%;background:var(--surface-muted);display:flex;align-items:center;justify-content:center"><i class="{{ a.iconClass }}" style="font-size:14px;color:{{ a.color }}"></i></span>
+<span style="flex:1;display:flex;flex-direction:column;gap:3px">
+<span style="font:500 15px/1.3 var(--font-sans);color:var(--text-heading)">{{ a.title }}</span>
+<span style="font:var(--type-caption);color:var(--text-muted)">{{ a.note }}</span>
+</span>
+<sc-if value="{{ a.hasAction }}" hint-placeholder-val="{{ false }}"><i class="fa-solid fa-chevron-right" style="font-size:12px;color:var(--stone-500)"></i></sc-if>
+</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabJournal }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="Journal" class="safa-scroll" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:12px 24px 120px">
+<div style="display:flex;justify-content:space-between;align-items:flex-end;margin:0 0 24px">
+<h1 style="margin:0;font:var(--type-h1);color:var(--text-heading)">Journal</h1>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" size="sm" icon="pen" on-click="{{ openJournal }}" hint-size="110px,36px">New entry</x-import>
+</div>
+<sc-if value="{{ hasSaved }}" hint-placeholder-val="{{ false }}">
+<div style="margin-bottom:12px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="sage" hint-size="100px,14px">Saved Days</x-import></div>
+<div style="display:flex;gap:10px;overflow-x:auto;margin:0 -24px 32px;padding:0 24px;scrollbar-width:none" class="safa-scroll">
+<sc-for list="{{ savedDays }}" as="s" hint-placeholder-count="2">
+<button onClick="{{ s.onClick }}" style="flex:none;width:150px;padding:0;border:1px solid var(--border-subtle);border-radius:14px;overflow:hidden;background:var(--surface-card);text-align:left;cursor:pointer;font:inherit">
+<div style="height:90px;background-size:cover;background-position:center;background-image:{{ s.bg }}"></div>
+<div style="padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px">
+<span style="font:var(--type-caption);color:var(--text-muted)">{{ s.date }}</span>
+<span style="font:500 15px/1.3 var(--font-display);color:var(--text-heading)">{{ s.theme }}</span>
+</div>
+</button>
+</sc-for>
+</div>
+</sc-if>
+<div style="margin-bottom:4px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="mauve" hint-size="100px,14px">Reflections</x-import></div>
+<sc-for list="{{ entries }}" as="e" hint-placeholder-count="2">
+<div style="padding:20px 0;border-bottom:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:8px">
+<span style="font:var(--type-caption);color:var(--text-muted)">{{ e.date }}</span>
+<span style="font:italic 400 17px/1.5 var(--font-serif);color:var(--text-mauve)">{{ e.prompt }}</span>
+<span style="font:400 16px/1.7 var(--font-serif);color:var(--text-heading)">{{ e.text }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ tabYou }}" hint-placeholder-val="{{ false }}">
+<div data-screen-label="You" class="safa-scroll" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:12px 24px 120px;display:flex;flex-direction:column">
+<h1 style="margin:0 0 28px;font:var(--type-h1);color:var(--text-heading)">You</h1>
+<div style="margin-bottom:12px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="muted" hint-size="100px,14px">Hemisphere</x-import></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.SegmentedControl" options="{{ hemiOptions }}" value="{{ hemi }}" on-change="{{ setHemi }}" hint-size="100%,48px"></x-import>
+<p style="margin:10px 0 28px;font:var(--type-caption);color:var(--text-muted)">Seasons and nature notes follow the {{ hemiLower }} hemisphere.</p>
+<div style="margin-bottom:12px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="muted" hint-size="100px,14px">Notifications</x-import></div>
+<div style="background:var(--surface-card);border:1px solid var(--border-subtle);border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:18px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Toggle" checked="{{ remind }}" on-change="{{ setRemind }}" label="Morning reminder" description="7:00 · silent" hint-size="100%,44px"></x-import>
+<div style="height:1px;background:var(--border-subtle)"></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Toggle" checked="{{ obsRemind }}" on-change="{{ setObsRemind }}" label="Observances you follow" description="The evening before" hint-size="100%,44px"></x-import>
+</div>
+<div style="height:28px"></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" variant="secondary" full-width="{{ true }}" icon="rotate-left" on-click="{{ replay }}" hint-size="100%,44px">Replay welcome</x-import>
+<div style="flex:1;min-height:40px"></div>
+<div style="display:flex;justify-content:center;padding-top:24px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Wordmark" size="{{ 24 }}" tagline="{{ true }}" hint-size="56px,50px"></x-import>
+</div>
+</div>
+</sc-if>
+
+<div style="position:absolute;left:0;right:0;bottom:0;z-index:20">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.TabBar" items="{{ tabs }}" value="{{ tab }}" on-change="{{ setTab }}" hint-size="100%,84px"></x-import>
+</div>
+
+<div data-screen-label="Observance detail" style="position:absolute;inset:0;z-index:30;background:var(--bg-canvas);display:flex;flex-direction:column;transition:transform 520ms cubic-bezier(.16,1,.3,1);transform:{{ obsT }}">
+<div style="flex:none;height:52px;display:flex;align-items:center;padding:0 12px;gap:4px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.IconButton" icon="chevron-left" label="Back" on-click="{{ closeObs }}" hint-size="44px,44px"></x-import>
+<span style="font:500 17px/1 var(--font-display);color:var(--text-heading)">Observance</span>
+</div>
+<div class="safa-scroll" ref="{{ obsScrollRef }}" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:8px 24px 48px;display:flex;flex-direction:column">
+<div style="height:220px;flex:none;border-radius:14px;background-size:cover;background-position:center;background-image:{{ obsBg }}"></div>
+<div style="display:flex;align-items:center;gap:10px;margin:20px 0 10px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Tag" tone="{{ obs.tagTone }}" hint-size="80px,28px">{{ obs.tone }}</x-import>
+<span style="font:var(--type-caption);color:var(--text-muted)">{{ obs.date }}</span>
+</div>
+<h1 style="margin:0;font:var(--type-h1);color:var(--text-heading);text-wrap:balance">{{ obs.title }}</h1>
+<p style="margin:12px 0 0;font:var(--type-blend);color:var(--text-body);text-wrap:pretty">{{ obs.lead }}</p>
+<sc-for list="{{ obs.sections }}" as="sec" hint-placeholder-count="3">
+<div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border-rule);display:flex;flex-direction:column;gap:10px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" hint-size="120px,14px">{{ sec.label }}</x-import>
+<p style="margin:0;font:var(--type-body);color:var(--text-body);text-wrap:pretty">{{ sec.text }}</p>
+</div>
+</sc-for>
+<div style="margin-top:28px;padding-top:24px;border-top:1px solid var(--border-rule);display:flex;flex-direction:column;gap:12px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="sage" hint-size="120px,14px">Related Practices</x-import>
+<sc-for list="{{ obsPractices }}" as="op" hint-placeholder-count="3">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.PracticeItem" title="{{ op.title }}" category="{{ op.category }}" duration="{{ op.duration }}" done="{{ op.done }}" on-toggle="{{ op.onToggle }}" hint-size="100%,72px"></x-import>
+</sc-for>
+</div>
+<div style="margin-top:32px;display:flex;flex-direction:column;gap:10px">
+<sc-if value="{{ obsAllowsGreeting }}" hint-placeholder-val="{{ true }}">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" variant="warm" size="lg" full-width="{{ true }}" icon="envelope" on-click="{{ openGreet }}" hint-size="100%,52px">Send a greeting</x-import>
+</sc-if>
+<sc-if value="{{ obsSolemn }}" hint-placeholder-val="{{ false }}">
+<div style="padding:18px 20px;background:var(--surface-muted);border:1px solid var(--border-subtle);border-radius:10px;display:flex;gap:12px;align-items:flex-start">
+<i class="fa-solid fa-feather" style="font-size:14px;color:var(--stone-500);margin-top:4px"></i>
+<span style="font:var(--type-small);color:var(--text-body)">Greetings are not offered for this observance. Quiet presence says more today.</span>
+</div>
+</sc-if>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" variant="secondary" size="lg" full-width="{{ true }}" icon="{{ calIcon }}" on-click="{{ toggleCal }}" hint-size="100%,52px">{{ calLabel }}</x-import>
+</div>
+</div>
+</div>
+
+<div data-screen-label="Greeting composer" style="position:absolute;inset:0;z-index:40;background:var(--bg-canvas);display:flex;flex-direction:column;transition:transform 520ms cubic-bezier(.16,1,.3,1);transform:{{ greetT }}">
+<div style="flex:none;height:52px;display:flex;align-items:center;padding:0 12px;gap:4px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.IconButton" icon="chevron-left" label="Back" on-click="{{ closeGreet }}" hint-size="44px,44px"></x-import>
+<span style="font:500 17px/1 var(--font-display);color:var(--text-heading)">A greeting for {{ obs.title }}</span>
+</div>
+<div class="safa-scroll" style="flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:8px 24px 48px;display:flex;flex-direction:column">
+<div style="position:relative;flex:none;aspect-ratio:4/5;border-radius:14px;overflow:hidden;border:1px solid var(--border-subtle);background:{{ card.bg }};background-size:cover;background-position:center;transition:background 480ms cubic-bezier(.22,.61,.36,1)">
+<div style="position:absolute;inset:0;background:{{ card.wash }}"></div>
+<div style="position:absolute;inset:0;padding:32px 28px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;align-items:center">
+<span style="font:500 11px/1.2 var(--font-sans);letter-spacing:.14em;text-transform:uppercase;color:{{ card.eyebrow }}">{{ obs.title }}</span>
+<div style="display:flex;flex-direction:column;gap:18px;align-items:center">
+<span style="font:500 30px/1.15 var(--font-display);color:{{ card.fg }};text-wrap:balance">{{ obs.greetHeadline }}</span>
+<span style="font:italic 400 16px/1.6 var(--font-serif);color:{{ card.fg }};text-wrap:pretty;max-width:270px">{{ noteShown }}</span>
+</div>
+<span style="font:400 13px/1.4 var(--font-sans);color:{{ card.eyebrow }}">For {{ recipientShown }}, with warmth from Safa</span>
+</div>
+</div>
+<div style="margin:28px 0 12px"><x-import component-from-global-scope="SafaDesignSystem_a782c7.Eyebrow" tone="muted" hint-size="100px,14px">Card</x-import></div>
+<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+<sc-for list="{{ cardStyles }}" as="cs" hint-placeholder-count="3">
+<button onClick="{{ cs.onClick }}" style="display:flex;flex-direction:column;gap:8px;align-items:center;padding:0;border:none;background:none;cursor:pointer;font:inherit">
+<span style="width:100%;height:64px;border-radius:10px;background:{{ cs.swatch }};background-size:cover;background-position:center;box-shadow:{{ cs.ring }}"></span>
+<span style="font:var(--type-caption);color:var(--text-body)">{{ cs.label }}</span>
+</button>
+</sc-for>
+</div>
+<div style="height:24px"></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.TextField" label="For" value="{{ recipient }}" on-change="{{ setRecipient }}" placeholder="A name" hint-size="100%,76px"></x-import>
+<div style="margin:24px 0 10px;font:var(--type-label);color:var(--text-heading)">Your note</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+<sc-for list="{{ suggestions }}" as="sg" hint-placeholder-count="3">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Tag" tone="terracotta" selected="{{ sg.selected }}" on-click="{{ sg.onClick }}" hint-size="90px,28px">{{ sg.label }}</x-import>
+</sc-for>
+</div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.JournalField" value="{{ note }}" on-change="{{ setNote }}" rows="{{ 3 }}" placeholder="Write a few words in your own voice…" hint-size="100%,110px"></x-import>
+<div style="height:28px"></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" variant="warm" size="lg" full-width="{{ true }}" icon="share-from-square" on-click="{{ shareGreet }}" hint-size="100%,52px">Share greeting</x-import>
+</div>
+</div>
+
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Sheet" open="{{ learnOpen }}" on-close="{{ closeLearn }}" title="{{ day.learn.title }}" hint-size="0px,0px">
+<p style="margin:0 0 24px;font:var(--type-body);color:var(--text-body);text-wrap:pretty">{{ day.learn.text }}</p>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" variant="secondary" full-width="{{ true }}" on-click="{{ closeLearn }}" hint-size="100%,44px">Close</x-import>
+</x-import>
+
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Sheet" open="{{ journalOpen }}" on-close="{{ closeJournal }}" title="Reflect" hint-size="0px,0px">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.JournalField" prompt="{{ day.reflect }}" value="{{ draft }}" on-change="{{ setDraft }}" rows="{{ 6 }}" hint-size="100%,200px"></x-import>
+<div style="height:20px"></div>
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Button" full-width="{{ true }}" disabled="{{ draftEmpty }}" on-click="{{ saveEntry }}" hint-size="100%,44px">Save to journal</x-import>
+</x-import>
+
+<div style="position:absolute;left:0;right:0;bottom:104px;z-index:60;display:flex;justify-content:center;pointer-events:none">
+<x-import component-from-global-scope="SafaDesignSystem_a782c7.Toast" message="{{ toast }}" visible="{{ toastOn }}" hint-size="200px,40px"></x-import>
+</div>
+</div>
+</sc-if>
+
+<div style="position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:#2B2A27;z-index:90;pointer-events:none"></div>
+</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;startScreen&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;onboarding&quot;,&quot;today&quot;],&quot;default&quot;:&quot;onboarding&quot;,&quot;tsType&quot;:&quot;'onboarding'|'today'&quot;},&quot;initialDay&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;quiet&quot;,&quot;fullmoon&quot;,&quot;sacred&quot;],&quot;default&quot;:&quot;fullmoon&quot;,&quot;tsType&quot;:&quot;'quiet'|'fullmoon'|'sacred'&quot;}}">
+const IMG = 'assets/imagery/';
+const DAYS = [
+  { id: 'quiet', date: 'Wednesday, 14 October', type: 'Quiet day', tone: 'neutral', theme: 'A day of quiet grounding',
+    blend: 'Not every meaningful day arrives loudly. Today supports subtle care, patience, and mindful maintenance.',
+    image: IMG + 'olive-shadow-wall.jpg', cues: ['Waxing moon', 'Stable seasonal rhythm'],
+    shapes: [
+      { icon: 'moon', kind: 'moon', title: 'Waxing moon', detail: 'A gentle build; nothing asks to be finished yet.' },
+      { icon: 'leaf', kind: 'season', title: 'Stable seasonal rhythm', detail: 'Mid-autumn in the Northern Hemisphere.' },
+      { icon: 'circle', kind: 'observance', title: 'No major global observance', detail: 'Tone: stillness and consistency.' }],
+    nature: { title: 'Seed heads are ripening', text: 'Leave some flower heads standing. Finches and other small birds feed on them through the colder weeks.', image: IMG + 'sage-leaves.jpg' },
+    practice: [
+      { title: 'Tend to one corner of your home', category: 'Home & body', duration: '15 min' },
+      { title: 'Make one nourishing choice for your body', category: 'Home & body' },
+      { title: 'Spend ten quiet minutes outside', category: 'Nature', duration: '10 min' }],
+    reflect: 'What do I notice when life is not demanding my reaction?',
+    learn: { title: 'Why quiet days matter', text: 'On days with no major cultural or solar milestones, Safa leans on the ongoing lunar phase and the micro-season. Every day holds a subtle rhythm, even in the quietest weeks of the year.' } },
+  { id: 'fullmoon', date: 'Friday, 16 October', type: 'Ritual day', tone: 'mauve', theme: 'What is ready to be released',
+    blend: 'Today illuminates what is ready to be released. The full moon heightens visibility and emotional clarity, making this a powerful moment for cleansing, completion, and honest reflection.',
+    image: IMG + 'moonrise.jpg', cues: ['Full moon', 'Release'],
+    shapes: [
+      { icon: 'moon', kind: 'moon', title: 'Full moon', detail: 'Emotional visibility, culmination energy.' },
+      { icon: 'feather', kind: 'observance', title: 'Release theme', detail: 'Shared across many lunar traditions.' },
+      { icon: 'leaf', kind: 'season', title: 'Leaf fall', detail: 'The season is letting go alongside you.' }],
+    nature: { title: 'A good night to look up', text: 'Clear autumn skies make the full moon easy to see from early evening. Owls are more vocal as territories settle for winter.', image: IMG + 'leaf-shadow.jpg' },
+    practice: [
+      { title: 'Place a bowl of water under moonlight', category: 'Ritual' },
+      { title: 'Clear one room or drawer', category: 'Home & body', duration: '20 min' },
+      { title: 'Write and release one emotional burden', category: 'Reflection', duration: '5 min' }],
+    reflect: 'What truth has become too visible to ignore?',
+    learn: { title: 'The full moon across cultures', text: 'Many calendars mark the full moon as a point of completion. Safa does not flatten these into sameness; it notes where traditions overlap and where they differ.' } },
+  { id: 'sacred', date: 'Sunday, 18 October', type: 'Sacred day', tone: 'terracotta', obsId: 'remembrance', theme: 'Reverence, pause, and remembrance',
+    blend: 'Today carries reverence, pause, and remembrance. For many, this observance holds deep spiritual meaning. Safa honors its significance while inviting all users into awareness, humility, and respectful presence.',
+    image: IMG + 'lamp-plinth.jpg', cues: ['Observance', 'Remembrance'],
+    shapes: [
+      { icon: 'star', kind: 'observance', title: 'A day of observance', detail: 'Handled with restraint; no cheerful greeting.' },
+      { icon: 'moon', kind: 'moon', title: 'Waning gibbous', detail: 'A softening after the full moon.' }],
+    nature: { title: 'Bulbs go in now', text: 'Plant spring bulbs before the first hard frost, roughly twice as deep as the bulb is tall.', image: IMG + 'soil-shears.jpg' },
+    practice: [
+      { title: 'Slow your pace', category: 'Body' },
+      { title: 'Learn something about the observance', category: 'Learning', duration: '5 min' },
+      { title: 'Perform one quiet act of gratitude or generosity', category: 'Connection' }],
+    reflect: 'Who or what would I like to remember today?',
+    learn: { title: 'About this observance', text: 'Safa offers context respectfully and avoids certainty where tradition is nuanced. Read more from the communities who keep this day.' } }
+];
+const OBS = {
+  remembrance: { title: 'A Day of Remembrance', date: 'Sunday, 18 October', tone: 'Reverent', tagTone: 'neutral', solemn: true, image: IMG + 'lamp-plinth.jpg',
+    lead: 'A day kept for honouring those who have passed and the events that shaped a community.',
+    sections: [
+      { label: 'Meaning & History', text: 'Days of remembrance appear across many traditions. Their roots differ, but most share a wish to hold memory with care and to let grief and gratitude sit side by side.' },
+      { label: 'How It’s Observed', text: 'Often through quiet gatherings, prayer, visiting graves or memorials, lighting a candle, and setting celebration aside for the day.' },
+      { label: 'Respectful Etiquette', text: 'Keep your tone quiet. If someone you know is observing, presence matters more than words; a simple note that you are thinking of them is enough.' }],
+    practices: [
+      { title: 'Light a candle for someone you remember', category: 'Remembrance' },
+      { title: 'Slow your pace for one hour', category: 'Body' },
+      { title: 'Perform one quiet act of generosity', category: 'Connection' }] },
+  diwali: { title: 'Diwali', date: 'Sunday, 8 November', tone: 'Festival of lights', tagTone: 'terracotta', solemn: false, image: IMG + 'candle-pinecone.jpg',
+    greetHeadline: 'Wishing you a season of light',
+    lead: 'A festival of light over darkness, kept by Hindus, Sikhs, Jains and some Buddhists, each with their own stories and emphasis.',
+    sections: [
+      { label: 'Meaning & History', text: 'For many Hindus, Diwali recalls the return of Rama to Ayodhya. Sikhs mark Bandi Chhor Divas, and Jains remember the liberation of Mahavira. The shared thread is light, renewal and return.' },
+      { label: 'How It’s Observed', text: 'Homes are cleaned and lit with small clay lamps, rangoli patterns are drawn at thresholds, sweets are shared between families and neighbours, and many visit a temple or gurdwara.' },
+      { label: 'Respectful Etiquette', text: 'A warm “Happy Diwali” is welcome. Avoid assuming everyone celebrates the same story; ask, and listen. Sweets are a kind gift; avoid alcohol unless you know it is welcome.' }],
+    practices: [
+      { title: 'Light one lamp at dusk', category: 'Ritual', duration: '5 min' },
+      { title: 'Clear and sweep one threshold', category: 'Home & body', duration: '15 min' },
+      { title: 'Share something sweet with a neighbour', category: 'Connection' }] }
+};
+const ALMANAC = [
+  { date: '14 Oct', title: 'Quiet day', note: 'Waxing moon', kind: 'season', icon: 'leaf', day: 0 },
+  { date: '16 Oct', title: 'Full moon', note: 'Release and completion', kind: 'moon', icon: 'moon', day: 1 },
+  { date: '18 Oct', title: 'A Day of Remembrance', note: 'Observance · reverent', kind: 'observance', icon: 'star', obs: 'remembrance' },
+  { date: '23 Oct', title: 'Frost dates begin', note: 'Northern gardens', kind: 'season', icon: 'leaf' },
+  { date: '31 Oct', title: 'Cross-quarter day', note: 'Midway to the winter solstice', kind: 'season', icon: 'sun' },
+  { date: '1 Nov', title: 'New moon', note: 'A fresh cycle', kind: 'moon', icon: 'circle' },
+  { date: '8 Nov', title: 'Diwali', note: 'Festival of lights', kind: 'observance', icon: 'star', obs: 'diwali' }
+];
+const KIND_COLOR = { moon: 'var(--mauve-500)', observance: 'var(--terracotta-500)', season: 'var(--sage-500)' };
+const WEEK = [['Mon', 12], ['Tue', 13], ['Wed', 14, 0], ['Thu', 15], ['Fri', 16, 1], ['Sat', 17], ['Sun', 18, 2]];
+const CARDS = [
+  { id: 'lamp', label: 'Lamplight', bg: `url(${IMG}candle-pinecone.jpg)`, wash: 'rgba(43,42,39,.55)', fg: 'var(--linen-0)', eyebrow: 'var(--linen-200)' },
+  { id: 'clay', label: 'Clay', bg: `url(${IMG}terracotta-room.jpg)`, wash: 'rgba(248,238,231,.78)', fg: 'var(--charcoal-900)', eyebrow: 'var(--terracotta-700)' },
+  { id: 'linen', label: 'Linen', bg: 'var(--linen-0)', wash: 'transparent', fg: 'var(--charcoal-900)', eyebrow: 'var(--stone-600)' }
+];
+const SUGGEST = [
+  { label: 'Light & warmth', text: 'May your home be full of light, and your table full of the people you love.' },
+  { label: 'Renewal', text: 'Wishing you a fresh beginning and a calm, bright year ahead.' },
+  { label: 'Simple', text: 'Thinking of you and your family this Diwali.' }
+];
+
+class Component extends DCLogic {
+  state = {
+    screen: null, step: 0, hemi: 'Northern', remind: true, obsRemind: true, tab: 'today', dayIdx: null, fade: 1,
+    done: {}, saved: {}, learnOpen: false, journalOpen: false, draft: '',
+    entries: [
+      { date: '12 Oct', prompt: 'What can I let settle today?', text: 'The kitchen table, mostly. And the conversation from Sunday.' },
+      { date: '9 Oct', prompt: 'Where did I notice the season today?', text: 'Cold air on the walk to the station. The plane trees have started turning.' }],
+    obsId: 'diwali', obsOpen: false, obsDone: {}, cal: {}, greetOpen: false,
+    cardStyle: 'lamp', recipient: 'Ahmed', note: SUGGEST[0].text, toast: '', toastOn: false
+  };
+  scrollRef = React.createRef();
+  obsScrollRef = React.createRef();
+
+  showToast(msg) {
+    clearTimeout(this._t);
+    this.setState({ toast: msg, toastOn: true });
+    this._t = setTimeout(() => this.setState({ toastOn: false }), 2200);
+  }
+  goDay(i) {
+    const cur = this.state.dayIdx ?? this.initialDay();
+    if (i === cur) return;
+    this.setState({ fade: 0 });
+    setTimeout(() => {
+      this.setState({ dayIdx: i, fade: 1 });
+      if (this.scrollRef.current) this.scrollRef.current.scrollTop = 0;
+    }, 200);
+  }
+  initialDay() { return { quiet: 0, fullmoon: 1, sacred: 2 }[this.props.initialDay] ?? 1; }
+  openObs(id) {
+    if (this.obsScrollRef.current) this.obsScrollRef.current.scrollTop = 0;
+    this.setState({ obsId: id, obsOpen: true });
+  }
+  componentWillUnmount() { clearTimeout(this._t); }
+
+  renderVals() {
+    const s = this.state;
+    const screen = s.screen ?? (this.props.startScreen === 'today' ? 'app' : 'onboarding');
+    const di = s.dayIdx ?? this.initialDay();
+    const day = DAYS[di];
+    const vis = i => ({ o: s.step === i ? 1 : 0, t: s.step === i ? 'none' : `translateY(${s.step > i ? -12 : 12}px)`, pe: s.step === i ? 'auto' : 'none' });
+    const practiceItems = day.practice.map((p, i) => {
+      const k = day.id + i;
+      return { ...p, duration: p.duration, done: !!s.done[k], onToggle: v => this.setState(st => ({ done: { ...st.done, [k]: v } })) };
+    });
+    const nDone = practiceItems.filter(p => p.done).length;
+    const obs = OBS[s.obsId];
+    const card = CARDS.find(c => c.id === s.cardStyle);
+    const savedDays = DAYS.map((d, i) => ({ d, i })).filter(x => s.saved[x.d.id]).map(({ d, i }) => ({
+      date: d.date, theme: d.theme, bg: `url(${d.image})`, onClick: () => { this.setState({ tab: 'today' }); this.goDay(i); }
+    }));
+    return {
+      isOnboarding: screen === 'onboarding', isApp: screen === 'app',
+      journey: ['Welcome', 'Hemisphere', 'Notification', 'Daily Blend'], step: s.step,
+      ob0: vis(0), ob1: vis(1), ob2: vis(2),
+      next: () => s.step < 2 ? this.setState({ step: s.step + 1 }) : this.setState({ screen: 'app', tab: 'today' }),
+      hemiOptions: ['Northern', 'Southern'], hemi: s.hemi, hemiLower: s.hemi.toLowerCase(),
+      setHemi: v => this.setState({ hemi: v }),
+      remind: s.remind, setRemind: v => this.setState({ remind: v }),
+      obsRemind: s.obsRemind, setObsRemind: v => this.setState({ obsRemind: v }),
+      tab: s.tab, setTab: v => this.setState({ tab: v }),
+      tabs: [{ id: 'today', label: 'Today', icon: 'sun' }, { id: 'almanac', label: 'Almanac', icon: 'calendar' }, { id: 'journal', label: 'Journal', icon: 'bookmark' }, { id: 'you', label: 'You', icon: 'user' }],
+      tabToday: s.tab === 'today', tabAlmanac: s.tab === 'almanac', tabJournal: s.tab === 'journal', tabYou: s.tab === 'you',
+      day, dayRelative: ['Two days ago', 'Today', 'In two days'][di],
+      fadeO: s.fade, fadeT: s.fade ? 'none' : 'translateY(8px)', scrollRef: this.scrollRef, obsScrollRef: this.obsScrollRef,
+      prevDay: () => this.goDay((di + 2) % 3), nextDay: () => this.goDay((di + 1) % 3),
+      isSaved: !!s.saved[day.id],
+      toggleSave: () => { const v = !s.saved[day.id]; this.setState(st => ({ saved: { ...st.saved, [day.id]: v } })); this.showToast(v ? 'Day saved to your journal' : 'Removed from saved'); },
+      dayObs: day.obsId ? OBS[day.obsId] : null, openDayObs: () => this.openObs(day.obsId),
+      natureBg: `url(${day.nature.image})`,
+      practiceItems, doneLabel: nDone ? `${nDone} of ${practiceItems.length}` : '',
+      learnOpen: s.learnOpen, openLearn: () => this.setState({ learnOpen: true }), closeLearn: () => this.setState({ learnOpen: false }),
+      journalOpen: s.journalOpen, openJournal: () => this.setState({ journalOpen: true }), closeJournal: () => this.setState({ journalOpen: false }),
+      draft: s.draft, setDraft: v => this.setState({ draft: v }), draftEmpty: !s.draft.trim(),
+      saveEntry: () => { this.setState(st => ({ entries: [{ date: day.date.split(', ')[1].replace('October', 'Oct'), prompt: day.reflect, text: st.draft.trim() }, ...st.entries], draft: '', journalOpen: false })); this.showToast('Saved to your journal'); },
+      entries: s.entries, hasSaved: savedDays.length > 0, savedDays,
+      week: WEEK.map(([dow, num, d]) => {
+        const sel = d === di, today = num === 16;
+        return { dow, num, bg: sel ? 'var(--sage-700)' : 'transparent', fg: sel ? 'var(--linen-0)' : today ? 'var(--sage-700)' : 'var(--text-heading)',
+          dot: d === undefined ? 'transparent' : sel ? 'var(--linen-0)' : KIND_COLOR[['season', 'moon', 'observance'][d]],
+          onClick: () => { if (d !== undefined) { this.goDay(d); this.setState({ tab: 'today' }); } } };
+      }),
+      almanac: ALMANAC.map(a => {
+        const act = a.obs ? () => this.openObs(a.obs) : a.day !== undefined ? () => { this.goDay(a.day); this.setState({ tab: 'today' }); } : undefined;
+        return { ...a, iconClass: `fa-solid fa-${a.icon}`, color: KIND_COLOR[a.kind], hasAction: !!act, cursor: act ? 'pointer' : 'default', onClick: act };
+      }),
+      obs, obsBg: `url(${obs.image})`, obsT: s.obsOpen ? 'translateX(0)' : 'translateX(104%)',
+      closeObs: () => this.setState({ obsOpen: false, greetOpen: false }),
+      obsSolemn: obs.solemn, obsAllowsGreeting: !obs.solemn,
+      obsPractices: obs.practices.map((p, i) => { const k = s.obsId + i; return { ...p, done: !!s.obsDone[k], onToggle: v => this.setState(st => ({ obsDone: { ...st.obsDone, [k]: v } })) }; }),
+      calIcon: s.cal[s.obsId] ? 'check' : 'calendar-plus', calLabel: s.cal[s.obsId] ? 'Added to calendar' : 'Add to calendar',
+      toggleCal: () => { const v = !s.cal[s.obsId]; this.setState(st => ({ cal: { ...st.cal, [s.obsId]: v } })); this.showToast(v ? `${obs.title} added to your calendar` : 'Removed from calendar'); },
+      greetT: s.greetOpen ? 'translateX(0)' : 'translateX(104%)',
+      openGreet: () => this.setState({ greetOpen: true }), closeGreet: () => this.setState({ greetOpen: false }),
+      card, noteShown: s.note.trim() || 'Your note will appear here.', recipientShown: s.recipient.trim() || 'someone dear',
+      cardStyles: CARDS.map(c => ({ label: c.label, swatch: c.id === 'linen' ? 'var(--linen-0)' : c.bg, ring: c.id === s.cardStyle ? '0 0 0 2px var(--bg-canvas), 0 0 0 4px var(--sage-600)' : 'inset 0 0 0 1px var(--border-subtle)', onClick: () => this.setState({ cardStyle: c.id }) })),
+      recipient: s.recipient, setRecipient: v => this.setState({ recipient: v }),
+      note: s.note, setNote: v => this.setState({ note: v }),
+      suggestions: SUGGEST.map(g => ({ label: g.label, selected: s.note === g.text, onClick: () => this.setState({ note: g.text }) })),
+      shareGreet: () => { this.setState({ greetOpen: false }); this.showToast(`Greeting for ${s.recipient.trim() || 'someone dear'} is ready to share`); },
+      replay: () => this.setState({ screen: 'onboarding', step: 0 }),
+      toast: s.toast, toastOn: s.toastOn
+    };
+  }
+}
+</script>
+</body>
+</html>

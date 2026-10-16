@@ -1,0 +1,42 @@
+:root{
+/* Brand core (Brand DNA Manual §7) */
+--sage-50:#F1F4EC;--sage-100:#E3E9DA;--sage-200:#CFDABF;--sage-300:#B8C7A6;--sage-500:#9CAF88;--sage-600:#829778;--sage-700:#677A5C;--sage-800:#4D5C45;
+--terracotta-50:#F8EEE7;--terracotta-100:#F0DCCD;--terracotta-300:#DBAE92;--terracotta-500:#C17F59;--terracotta-600:#A86A47;--terracotta-700:#8A5638;
+--mauve-50:#F5EEF4;--mauve-100:#EADCE9;--mauve-300:#D2B5D0;--mauve-500:#B384B1;--mauve-700:#82597F;
+/* Neutrals — linen, oat, stone, charcoal (sampled from decks) */
+--linen-0:#FDFDFB;--linen-50:#F9F8F4;--linen-100:#F7F5F0;--linen-200:#F2EFE8;--linen-300:#E8E4DA;--stone-300:#DFDEDA;--stone-400:#C9C5BC;--stone-500:#A39E95;--stone-600:#7A756D;--charcoal-700:#5C5852;--charcoal-800:#3E3B36;--charcoal-900:#2B2A27;--charcoal-950:#33312E;
+
+/* Semantic aliases */
+--bg-canvas:var(--linen-100);
+--bg-canvas-soft:var(--linen-50);
+--surface-card:var(--linen-0);
+--surface-muted:var(--linen-200);
+--surface-sunken:var(--linen-300);
+--surface-inverse:var(--charcoal-950);
+--surface-sage:var(--sage-50);
+--surface-terracotta:var(--terracotta-50);
+--surface-mauve:var(--mauve-50);
+--border-subtle:var(--linen-300);
+--border-rule:var(--stone-300);
+--border-strong:var(--stone-400);
+--text-heading:var(--charcoal-900);
+--text-body:var(--charcoal-700);
+--text-muted:var(--stone-600);
+--text-faint:var(--stone-500);
+--text-inverse:var(--linen-100);
+--text-accent:var(--terracotta-500);      /* headline-scale only */
+--text-accent-strong:var(--terracotta-700);/* body-size accent text */
+--text-sage:var(--sage-700);
+--text-mauve:var(--mauve-700);
+--action-primary:var(--sage-700);
+--action-primary-hover:var(--sage-800);
+--action-primary-soft:var(--sage-100);
+--action-on-primary:var(--linen-0);
+--action-warm:var(--terracotta-500);
+--action-warm-hover:var(--terracotta-600);
+--icon-default:var(--sage-500);
+--icon-warm:var(--terracotta-500);
+--icon-muted:var(--stone-500);
+--focus-ring:color-mix(in oklch,var(--sage-500) 55%,transparent);/* @kind color */
+--overlay-scrim:rgba(43,42,39,.32);
+}
