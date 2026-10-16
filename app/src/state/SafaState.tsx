@@ -1,4 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ROW_BY_ID, addDays, clampKey, inRange, monthOf, shortDate, toKey } from '../data/calendar';
 import { SEED_ENTRIES, suggestionsFor, type CardStyleId, type JournalEntry } from '../data/content';
 import { buildDay, type DayView, type Hemisphere } from '../data/engine';
@@ -13,7 +14,16 @@ export type SafaConfig = {
   today?: string;
 };
 
+/** What survives an app restart: the user's profile and their settings. */
+type Persisted = { name: string; registered: boolean; hemi: Hemisphere; remind: boolean; obsRemind: boolean };
+const STORE_KEY = 'safa.profile.v1';
+
 type State = {
+  /** False until the saved profile has been read, so the welcome flow never flashes. */
+  ready: boolean;
+  /** True once onboarding is finished; later launches go straight to the app. */
+  registered: boolean;
+  name: string;
   screen: 'onboarding' | 'app';
   step: number;
   hemi: Hemisphere;
@@ -52,6 +62,9 @@ function initialState({ startScreen = 'onboarding', today }: SafaConfig): State 
   const day = buildDay(t, 'Northern');
   const first = day.share?.event ?? day.events[0];
   return {
+    ready: false,
+    registered: false,
+    name: '',
     screen: startScreen === 'today' ? 'app' : 'onboarding',
     step: 0,
     hemi: 'Northern',
@@ -92,6 +105,36 @@ function useSafaStore(config: SafaConfig) {
     setS(st => ({ ...st, ...patch }));
   }, []);
 
+  // Restore the saved profile once on launch. A returning user skips the welcome flow.
+  useEffect(() => {
+    let alive = true;
+    AsyncStorage.getItem(STORE_KEY)
+      .then(raw => {
+        if (!alive) return;
+        const saved = raw ? (JSON.parse(raw) as Partial<Persisted>) : {};
+        const registered = !!saved.registered;
+        set({
+          ready: true,
+          name: saved.name ?? '',
+          registered,
+          hemi: saved.hemi ?? 'Northern',
+          remind: saved.remind ?? true,
+          obsRemind: saved.obsRemind ?? true,
+          screen: config.startScreen === 'today' || registered ? 'app' : 'onboarding',
+        });
+      })
+      .catch(() => { if (alive) set({ ready: true }); });
+    return () => { alive = false; };
+  }, [set, config.startScreen]);
+
+  // Save the profile and settings whenever they change, once they have been restored.
+  const { ready, name, registered, hemi, remind, obsRemind } = s;
+  useEffect(() => {
+    if (!ready) return;
+    const data: Persisted = { name, registered, hemi, remind, obsRemind };
+    AsyncStorage.setItem(STORE_KEY, JSON.stringify(data)).catch(() => {});
+  }, [ready, name, registered, hemi, remind, obsRemind]);
+
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const dayTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => { clearTimeout(toastTimer.current); clearTimeout(dayTimer.current); }, []);
@@ -125,7 +168,9 @@ function useSafaStore(config: SafaConfig) {
       goToday: () => goDay(get().today),
       showDay: (key: string) => { set({ tab: 'today', obsOpen: false, greetOpen: false }); goDay(key); },
       setMonth: (month: string) => set({ month }),
-      nextStep: () => set(get().step < 2 ? { step: get().step + 1 } : { screen: 'app', tab: 'today' }),
+      nextStep: () => set(get().step < 3 ? { step: get().step + 1 } : { registered: true, screen: 'app', tab: 'today' }),
+      setName: (name: string) => set({ name }),
+      selectDay: (key: string) => goDay(key),
       replay: () => set({ screen: 'onboarding', step: 0 }),
       setHemi: (hemi: string) => set({ hemi: hemi as Hemisphere }),
       setRemind: (remind: boolean) => set({ remind }),

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
-import { Animated, Image, Pressable, StyleSheet, Text, View, type ScrollViewInstance } from 'react-native';
-import { PracticeItem } from '../ds/almanac';
+import { Animated, Pressable, StyleSheet, Text, View, type ScrollViewInstance } from 'react-native';
+import { FlatTile, PracticeItem } from '../ds/almanac';
 import { Button } from '../ds/Button';
 import { Eyebrow, Tag } from '../ds/display';
 import { JournalField, TextField } from '../ds/forms';
@@ -8,11 +8,11 @@ import { Icon } from '../ds/Icon';
 import { IconButton } from '../ds/IconButton';
 import { ROW_BY_ID, longDate, rangeLabel, shortDate } from '../data/calendar';
 import { CARDS, suggestionsFor, type CardStyle } from '../data/content';
-import { eventTypeLabel, greetingModeFor, imageForEvent, isFestive, isSolemn, practiceFor, seasonOf } from '../data/engine';
+import { eventTypeLabel, flatForEvent, greetingModeFor, isFestive, isSolemn, practiceFor, seasonOf } from '../data/engine';
 import { useTween } from '../lib/useTween';
 import { useSafa } from '../state/SafaState';
 import { color, font, motion, radius, type, wrap } from '../theme/tokens';
-import { Cover, Scroller, card, fillImage } from './shared';
+import { Scroller, card } from './shared';
 
 /** Full-screen page that slides in from the right (520ms, settle easing). */
 function SlideOver({ open, z, title, onBack, label, children }: { open: boolean; z: number; title: string; onBack: () => void; label: string; children: ReactNode }) {
@@ -71,7 +71,7 @@ export function ObservanceDetail({ bottomInset }: { bottomInset: number }) {
   return (
     <SlideOver open={s.obsOpen} z={30} title="Observance" onBack={closeObs} label="Observance detail">
       <Scroller ref={scroll} contentStyle={{ paddingTop: 8, paddingHorizontal: 24, paddingBottom: 48 + bottomInset }}>
-        <Cover source={imageForEvent(row, seasonOf(row, s.hemi))} style={{ height: 220, borderRadius: radius.lg }} />
+        <FlatTile flat={flatForEvent(row, seasonOf(row, s.hemi))} style={{ height: 220, borderRadius: radius.lg }} />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 20, marginBottom: 10 }}>
           <Tag tone={tagTone}>{eventTypeLabel(row)}</Tag>
           <Text style={[type.caption, { color: color.textMuted, flexShrink: 1 }]}>{longDate(row.date)}{day ? ` · ${day}` : ''}</Text>
@@ -136,7 +136,6 @@ function CardLayer({ style, on }: { style: CardStyle; on: boolean }) {
   const v = useTween(on ? 1 : 0, { duration: 480 });
   return (
     <Animated.View style={[StyleSheet.absoluteFill, { opacity: v, backgroundColor: style.bg }]}>
-      {style.image ? <Image source={style.image} resizeMode="cover" style={fillImage} /> : null}
       <View style={[StyleSheet.absoluteFill, { backgroundColor: style.wash }]} />
     </Animated.View>
   );
@@ -188,8 +187,7 @@ export function GreetingComposer({ bottomInset }: { bottomInset: number }) {
               >
                 <View style={{ alignSelf: 'stretch', height: 64 }}>
                   {on ? <View style={styles.swatchRing} /> : null}
-                  <View style={[StyleSheet.absoluteFill, { borderRadius: radius.md, overflow: 'hidden', backgroundColor: x.image ? x.bg : color.linen0 }]}>
-                    {x.image ? <Image source={x.image} resizeMode="cover" style={fillImage} /> : null}
+                  <View style={[StyleSheet.absoluteFill, { borderRadius: radius.md, overflow: 'hidden', backgroundColor: x.bg }]}>
                     {on ? null : <View style={[StyleSheet.absoluteFill, { borderRadius: radius.md, borderWidth: 1, borderColor: color.borderSubtle }]} />}
                   </View>
                 </View>

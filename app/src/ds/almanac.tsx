@@ -1,4 +1,4 @@
-import { Animated, Image, Pressable, Text, View, type ImageSourcePropType } from 'react-native';
+import { Animated, Pressable, Text, View, type StyleProp, type ViewStyle } from 'react-native';
 import { useTween } from '../lib/useTween';
 import { color, font, motion, radius, type, wrap } from '../theme/tokens';
 import { Icon } from './Icon';
@@ -14,12 +14,23 @@ export const KIND_COLOR: Record<ShapeKind, string> = {
   nature: color.sage600,
 };
 
-type BlendHeroProps = { date: string; theme: string; blend: string; image?: ImageSourcePropType; cues?: string[] };
+/** A flat colour field with one glyph, standing in for an illustration. */
+export type Flat = { bg: string; ink: string; icon: string };
 
-export function BlendHero({ date, theme, blend, image, cues = [] }: BlendHeroProps) {
+export function FlatTile({ flat, style }: { flat: Flat; style?: StyleProp<ViewStyle> }) {
+  return (
+    <View style={[{ backgroundColor: flat.bg, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }, style]}>
+      <Icon name={flat.icon} size={34} color={flat.ink} />
+    </View>
+  );
+}
+
+type BlendHeroProps = { date: string; theme: string; blend: string; flat?: Flat; cues?: string[] };
+
+export function BlendHero({ date, theme, blend, flat, cues = [] }: BlendHeroProps) {
   return (
     <View style={{ gap: 16 }}>
-      {image ? <Image source={image} resizeMode="cover" style={{ height: 200, width: '100%', borderRadius: radius.lg }} /> : null}
+      {flat ? <FlatTile flat={flat} style={{ height: 200, width: '100%', borderRadius: radius.lg }} /> : null}
       <Text style={[type.caption, { color: color.textMuted, letterSpacing: 12 * 0.02 }]}>{date}</Text>
       <Text accessibilityRole="header" style={[font('display', 500, 34, 1.12), wrap.balance, { color: color.textHeading, letterSpacing: -0.34 }]}>
         {theme}

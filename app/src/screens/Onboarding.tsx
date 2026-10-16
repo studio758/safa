@@ -2,14 +2,14 @@ import type { ReactNode } from 'react';
 import { Animated, StyleSheet, Text, View } from 'react-native';
 import { Button } from '../ds/Button';
 import { Eyebrow, PullQuote } from '../ds/display';
-import { SegmentedControl, Toggle } from '../ds/forms';
+import { SegmentedControl, TextField, Toggle } from '../ds/forms';
 import { JourneySteps } from '../ds/almanac';
 import { Wordmark } from '../ds/Wordmark';
 import { useTween } from '../lib/useTween';
 import { useSafa } from '../state/SafaState';
 import { clip, color, radius, type, wrap } from '../theme/tokens';
 
-const JOURNEY = ['Welcome', 'Hemisphere', 'Notification', 'Daily Blend'];
+const JOURNEY = ['Welcome', 'You', 'Hemisphere', 'Reminder'];
 
 /** One onboarding page; fades and rises 12px in/out depending on which side of the current step it sits. */
 function Step({ index, step, bottomPad, children }: { index: number; step: number; bottomPad: number; children: ReactNode }) {
@@ -36,7 +36,8 @@ function Step({ index, step, bottomPad, children }: { index: number; step: numbe
 }
 
 export function Onboarding({ bottomInset }: { bottomInset: number }) {
-  const { state: s, nextStep, setHemi, setRemind } = useSafa();
+  const { state: s, nextStep, setHemi, setRemind, setName } = useSafa();
+  const nameOk = s.name.trim().length > 0;
   const bottomPad = Math.max(44, bottomInset + 16);
   return (
     <View style={[{ flex: 1 }, clip]}>
@@ -59,6 +60,16 @@ export function Onboarding({ bottomInset }: { bottomInset: number }) {
 
       <Step index={1} step={s.step} bottomPad={bottomPad}>
         <View style={{ flex: 1, justifyContent: 'center', gap: 18 }}>
+          <Eyebrow>You</Eyebrow>
+          <Text accessibilityRole="header" style={[type.h1, wrap.balance, { color: color.textHeading }]}>What should we call you?</Text>
+          <Text style={[type.body, { color: color.textBody, marginBottom: 8 }]}>Used only to greet you. It stays on this device.</Text>
+          <TextField label="Your name" value={s.name} onChange={setName} placeholder="First name" />
+        </View>
+        <Button size="lg" fullWidth disabled={!nameOk} onPress={nextStep}>Continue</Button>
+      </Step>
+
+      <Step index={2} step={s.step} bottomPad={bottomPad}>
+        <View style={{ flex: 1, justifyContent: 'center', gap: 18 }}>
           <Eyebrow>Hemisphere</Eyebrow>
           <Text accessibilityRole="header" style={[type.h1, wrap.balance, { color: color.textHeading }]}>Where are you living through the seasons?</Text>
           <Text style={[type.body, { color: color.textBody, marginBottom: 8 }]}>One question, so autumn arrives for you when it actually arrives.</Text>
@@ -67,9 +78,9 @@ export function Onboarding({ bottomInset }: { bottomInset: number }) {
         <Button size="lg" fullWidth onPress={nextStep}>Continue</Button>
       </Step>
 
-      <Step index={2} step={s.step} bottomPad={bottomPad}>
+      <Step index={3} step={s.step} bottomPad={bottomPad}>
         <View style={{ flex: 1, justifyContent: 'center', gap: 18 }}>
-          <Eyebrow>Notification</Eyebrow>
+          <Eyebrow>Reminder</Eyebrow>
           <Text accessibilityRole="header" style={[type.h1, wrap.balance, { color: color.textHeading }]}>A single, silent ping each morning.</Text>
           <Text style={[type.body, { color: color.textBody, marginBottom: 8 }]}>Just enough to anchor the start of your day. Nothing more.</Text>
           <View style={styles.card}>

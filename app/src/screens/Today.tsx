@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { Animated, Pressable, Text, View, type ScrollViewInstance } from 'react-native';
-import { BlendHero, PracticeItem, ReflectPrompt, ShapesList } from '../ds/almanac';
+import { BlendHero, FlatTile, PracticeItem, ReflectPrompt, ShapesList } from '../ds/almanac';
 import { Button } from '../ds/Button';
 import { Eyebrow, Tag } from '../ds/display';
 import { IconButton } from '../ds/IconButton';
@@ -11,7 +11,7 @@ import { dayTypeLabel } from '../data/engine';
 import { useTween } from '../lib/useTween';
 import { useSafa } from '../state/SafaState';
 import { color, radius, type, wrap } from '../theme/tokens';
-import { Cover, ListRow, Scroller, card } from './shared';
+import { ListRow, Scroller, card } from './shared';
 
 export function Today() {
   const { state: s, day, prevDay, nextDay, goToday, toggleSave, openObs, openGreet, togglePractice, openJournal, openLearn } = useSafa();
@@ -52,7 +52,7 @@ export function Today() {
               </Pressable>
             )}
           </View>
-          <BlendHero date={day.date} theme={day.theme} blend={day.blend} image={day.image} cues={day.cues} />
+          <BlendHero date={day.date} theme={day.theme} blend={day.blend} flat={day.flat} cues={day.cues} />
 
           {lead ? (
             <ListRow
@@ -75,7 +75,7 @@ export function Today() {
           <View style={{ height: 36 }} />
           <View style={{ marginBottom: 14 }}><Eyebrow tone="sage">Nature Now</Eyebrow></View>
           <View style={{ borderRadius: radius.lg, overflow: 'hidden', backgroundColor: color.surfaceSage, borderWidth: 1, borderColor: color.sage100 }}>
-            <Cover source={day.nature.image} style={{ height: 128 }} />
+            <FlatTile flat={day.nature.flat} style={{ height: 128 }} />
             <View style={{ paddingTop: 18, paddingHorizontal: 20, paddingBottom: 20, gap: 6 }}>
               <Text style={[type.h3, { color: color.textHeading }]}>{day.nature.title}</Text>
               <Text style={[type.small, { color: color.textBody }]}>{day.nature.text}</Text>

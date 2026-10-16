@@ -1,5 +1,5 @@
 import { forwardRef, type ReactNode } from 'react';
-import { Image, Pressable, ScrollView, Text, View, type ImageSourcePropType, type ScrollViewInstance, type StyleProp, type ViewStyle } from 'react-native';
+import { Pressable, ScrollView, Text, View, type ScrollViewInstance, type StyleProp, type ViewStyle } from 'react-native';
 import type { PressState } from '../ds/Button';
 import { Icon } from '../ds/Icon';
 import { IconBadge } from '../ds/almanac';
@@ -30,21 +30,6 @@ export function ScreenTitle({ children, style }: { children: ReactNode; style?: 
   return (
     <View style={style}>
       <Text accessibilityRole="header" style={[type.h1, { color: color.textHeading }]}>{children}</Text>
-    </View>
-  );
-}
-
-/**
- * Style for an image filling its parent. Width/height must be explicit: on web an
- * Image otherwise takes the file's natural size, which overrides the absolute insets.
- */
-export const fillImage = { position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' } as const;
-
-/** Image tile with cover fit — stands in for CSS `background-size: cover`. */
-export function Cover({ source, style }: { source: ImageSourcePropType; style?: StyleProp<ViewStyle> }) {
-  return (
-    <View style={[{ overflow: 'hidden' }, style]}>
-      <Image source={source} resizeMode="cover" style={fillImage} />
     </View>
   );
 }

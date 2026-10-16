@@ -26,6 +26,7 @@ const FRAME_BOTTOM = 26;
 
 function AppBody({ bottomInset }: { bottomInset: number }) {
   const { state: s, day, setTab, closeLearn, closeJournal, setDraft, saveEntry, openObs } = useSafa();
+  if (!s.ready) return null;
   if (s.screen === 'onboarding') return <Onboarding bottomInset={bottomInset} />;
 
   return (

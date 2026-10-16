@@ -1,9 +1,8 @@
-import type { ImageSourcePropType } from 'react-native';
-import type { Shape } from '../ds/almanac';
+import type { Flat, Shape } from '../ds/almanac';
 import type { TagTone } from '../ds/display';
 import { color } from '../theme/tokens';
 import { ROWS, longDate, rowsFor, shortDate, type CalendarRow } from './calendar';
-import { CATEGORY, EVENT_TYPE, IMG, PRACTICE, REFLECT, SEASON_IMG, SEASON_NOTE, THEME, hash, type Season, type Tag } from './editorial';
+import { CATEGORY, EVENT_TYPE, FLAT, PRACTICE, REFLECT, SEASON_FLAT, SEASON_NOTE, THEME, type Season, type Tag } from './editorial';
 
 // Implements data/SAFA_spreadsheet_spec.xlsx: day_type_logic (R01–R11), priority_ladder,
 // module_visibility and greeting_logic, applied to the master calendar rows.
@@ -108,10 +107,10 @@ function solarTermOn(key: string) {
 
 export const seasonOf = (row: CalendarRow | undefined, hemi: Hemisphere) => ((hemi === 'Southern' ? row?.seasonS : row?.seasonN) || 'Autumn') as Season;
 
-export function imageForEvent(e: CalendarRow, season: Season): ImageSourcePropType {
-  if (isSolemn(e)) return IMG.lampPlinth;
-  const pool = SEASON_IMG[season];
-  return pool[hash(e.name) % pool.length];
+export function flatForEvent(e: CalendarRow, season: Season): Flat {
+  if (isSolemn(e)) return FLAT.solemn;
+  if (isFestive(e)) return FLAT.festive;
+  return SEASON_FLAT[season];
 }
 
 // ---- Day view ------------------------------------------------------------------
@@ -128,7 +127,7 @@ export type DayView = {
   tagTone: TagTone;
   theme: string;
   blend: string;
-  image: ImageSourcePropType;
+  flat: Flat;
   cues: string[];
   season: Season;
   moon?: CalendarRow;
@@ -136,7 +135,7 @@ export type DayView = {
   events: CalendarRow[];
   lead?: CalendarRow;
   shapes: (Shape & { eventId?: number })[];
-  nature: { title: string; text: string; image: ImageSourcePropType };
+  nature: { title: string; text: string; flat: Flat };
   practice: Practice[];
   prompt: PromptModule | null;
   /** Journal prompt for the day, used even when no prompt module is shown. */
@@ -173,17 +172,13 @@ export function buildDay(key: string, hemi: Hemisphere): DayView {
   const solemn = events.find(isSolemn);
   const lead = dayType === 'Sacred Solemn Day' || dayType === 'Mixed Significance Day' ? solemn : events[0];
 
-  const pool = SEASON_IMG[season];
-  const h = hash(key);
-  const image =
-    moon?.moonPhase === 'Full Moon' ? IMG.moonrise : solemn ? IMG.lampPlinth : pool[h % pool.length];
+  const flat = moon?.moonPhase === 'Full Moon' ? FLAT.moon : solemn ? FLAT.solemn : SEASON_FLAT[season];
 
   // Nature Now must appear every day (module_visibility). North: the solar term in effect.
   const term = hemi === 'Northern' ? solarTermOn(key) : undefined;
-  const natureImg = pool[(h + 1) % pool.length];
   const nature = term
-    ? { title: term.date === key ? `${term.name} begins today` : `${term.name}, since ${shortDate(term.date)}`, text: term.meaning, image: natureImg }
-    : { ...SEASON_NOTE[season], image: natureImg };
+    ? { title: term.date === key ? `${term.name} begins today` : `${term.name}, since ${shortDate(term.date)}`, text: term.meaning, flat: SEASON_FLAT[season] }
+    : { ...SEASON_NOTE[season], flat: SEASON_FLAT[season] };
 
   // What Shapes Today: the strongest 2–5 drivers.
   const shapes: DayView['shapes'] = [];
@@ -235,7 +230,7 @@ export function buildDay(key: string, hemi: Hemisphere): DayView {
     tagTone: rule.tag,
     theme: THEME[top],
     blend: blendFor(moon, events, lead),
-    image,
+    flat,
     cues,
     season,
     moon,

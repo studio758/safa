@@ -1,20 +1,8 @@
-import type { ImageSourcePropType } from 'react-native';
+import type { Flat } from '../ds/almanac';
 import { color } from '../theme/tokens';
 
 // Editorial layer, ported from the design system's app/content.js: copy that turns
 // a day's practical theme tags into a theme line, practices and a reflection prompt.
-
-export const IMG = {
-  oliveShadowWall: require('../../assets/imagery/olive-shadow-wall.jpg'),
-  sageLeaves: require('../../assets/imagery/sage-leaves.jpg'),
-  moonrise: require('../../assets/imagery/moonrise.jpg'),
-  leafShadow: require('../../assets/imagery/leaf-shadow.jpg'),
-  lampPlinth: require('../../assets/imagery/lamp-plinth.jpg'),
-  soilShears: require('../../assets/imagery/soil-shears.jpg'),
-  candlePinecone: require('../../assets/imagery/candle-pinecone.jpg'),
-  terracottaRoom: require('../../assets/imagery/terracotta-room.jpg'),
-  clayTagine: require('../../assets/imagery/clay-tagine.jpg'),
-} satisfies Record<string, ImageSourcePropType>;
 
 export type Tag =
   | 'celebration' | 'devotion' | 'gratitude' | 'renewal' | 'release' | 'reflection' | 'remembrance'
@@ -71,12 +59,21 @@ export const REFLECT: Record<Tag, string> = {
 
 export type Season = 'Spring' | 'Summer' | 'Autumn' | 'Winter';
 
-/** Seasonal photography, from the design's SEASON_IMG (limited to the images in the handoff). */
-export const SEASON_IMG: Record<Season, ImageSourcePropType[]> = {
-  Summer: [IMG.leafShadow, IMG.sageLeaves],
-  Autumn: [IMG.clayTagine, IMG.oliveShadowWall, IMG.terracottaRoom],
-  Winter: [IMG.candlePinecone, IMG.lampPlinth],
-  Spring: [IMG.sageLeaves, IMG.soilShears],
+/**
+ * Flat colour fields replace photography: one colour family and one glyph per kind of day,
+ * so each occasion reads at a glance and never looks like a stock picture.
+ */
+export const FLAT = {
+  moon: { bg: color.mauve100, ink: color.mauve700, icon: 'moon' },
+  festive: { bg: color.terracotta100, ink: color.terracotta700, icon: 'star' },
+  solemn: { bg: color.charcoal900, ink: color.linen100, icon: 'star' },
+} satisfies Record<string, Flat>;
+
+export const SEASON_FLAT: Record<Season, Flat> = {
+  Spring: { bg: color.sage100, ink: color.sage700, icon: 'seedling' },
+  Summer: { bg: color.sage200, ink: color.sage800, icon: 'sun' },
+  Autumn: { bg: color.terracotta50, ink: color.terracotta700, icon: 'leaf' },
+  Winter: { bg: color.linen300, ink: color.charcoal700, icon: 'snowflake' },
 };
 
 /**
