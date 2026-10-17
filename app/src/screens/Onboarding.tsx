@@ -1,15 +1,16 @@
-import type { ReactNode } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import { useEffect, type ReactNode } from 'react';
+import { Animated, Text, View, StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 import { Button } from '../ds/Button';
 import { Eyebrow, PullQuote } from '../ds/display';
-import { SegmentedControl, TextField, Toggle } from '../ds/forms';
+import { SegmentedControl, TextField } from '../ds/forms';
 import { JourneySteps } from '../ds/almanac';
 import { Wordmark } from '../ds/Wordmark';
 import { useTween } from '../lib/useTween';
 import { useSafa } from '../state/SafaState';
-import { clip, color, radius, type, wrap } from '../theme/tokens';
+import { clip, color, type, wrap } from '../theme/tokens';
 
-const JOURNEY = ['Welcome', 'You', 'Hemisphere', 'Reminder'];
+const JOURNEY = ['Welcome', 'You', 'Hemisphere'];
 
 /** One onboarding page; fades and rises 12px in/out depending on which side of the current step it sits. */
 function Step({ index, step, bottomPad, children }: { index: number; step: number; bottomPad: number; children: ReactNode }) {
@@ -36,9 +37,18 @@ function Step({ index, step, bottomPad, children }: { index: number; step: numbe
 }
 
 export function Onboarding({ bottomInset }: { bottomInset: number }) {
-  const { state: s, nextStep, setHemi, setRemind, setName } = useSafa();
-  const nameOk = s.name.trim().length > 0;
+  const { state: s, nextStep, endReplay, setName, setHemisphere } = useSafa();
   const bottomPad = Math.max(44, bottomInset + 16);
+  const replaying = s.replaying;
+
+  // When this flow was opened from Settings, closing it clears the replay flag so the gate behaves normally again.
+  useEffect(() => () => endReplay(), [endReplay]);
+
+  const finish = () => {
+    nextStep();
+    if (replaying) router.back();
+  };
+
   return (
     <View style={[{ flex: 1 }, clip]}>
       <View style={{ position: 'absolute', top: 18, left: 28, right: 28, zIndex: 2 }}>
@@ -62,10 +72,12 @@ export function Onboarding({ bottomInset }: { bottomInset: number }) {
         <View style={{ flex: 1, justifyContent: 'center', gap: 18 }}>
           <Eyebrow>You</Eyebrow>
           <Text accessibilityRole="header" style={[type.h1, wrap.balance, { color: color.textHeading }]}>What should we call you?</Text>
-          <Text style={[type.body, { color: color.textBody, marginBottom: 8 }]}>Used only to greet you. It stays on this device.</Text>
-          <TextField label="Your name" value={s.name} onChange={setName} placeholder="First name" />
+          <Text style={[type.body, { color: color.textBody, marginBottom: 8 }]}>
+            Optional. Used only to greet you, and stored only on this device.
+          </Text>
+          <TextField label="Your name" value={s.name} onChange={setName} placeholder="First name (optional)" />
         </View>
-        <Button size="lg" fullWidth disabled={!nameOk} onPress={nextStep}>Continue</Button>
+        <Button size="lg" fullWidth onPress={nextStep}>Continue</Button>
       </Step>
 
       <Step index={2} step={s.step} bottomPad={bottomPad}>
@@ -73,33 +85,14 @@ export function Onboarding({ bottomInset }: { bottomInset: number }) {
           <Eyebrow>Hemisphere</Eyebrow>
           <Text accessibilityRole="header" style={[type.h1, wrap.balance, { color: color.textHeading }]}>Where are you living through the seasons?</Text>
           <Text style={[type.body, { color: color.textBody, marginBottom: 8 }]}>One question, so autumn arrives for you when it actually arrives.</Text>
-          <SegmentedControl options={['Northern', 'Southern']} value={s.hemi} onChange={setHemi} />
+          <SegmentedControl
+            options={['Northern', 'Southern']}
+            value={s.settings.hemisphere}
+            onChange={v => setHemisphere(v === 'Southern' ? 'Southern' : 'Northern')}
+          />
         </View>
-        <Button size="lg" fullWidth onPress={nextStep}>Continue</Button>
-      </Step>
-
-      <Step index={3} step={s.step} bottomPad={bottomPad}>
-        <View style={{ flex: 1, justifyContent: 'center', gap: 18 }}>
-          <Eyebrow>Reminder</Eyebrow>
-          <Text accessibilityRole="header" style={[type.h1, wrap.balance, { color: color.textHeading }]}>A single, silent ping each morning.</Text>
-          <Text style={[type.body, { color: color.textBody, marginBottom: 8 }]}>Just enough to anchor the start of your day. Nothing more.</Text>
-          <View style={styles.card}>
-            <Toggle checked={s.remind} onChange={setRemind} label="Morning reminder" description="7:00 · silent" />
-          </View>
-        </View>
-        <Button size="lg" fullWidth onPress={nextStep}>See today</Button>
+        <Button size="lg" fullWidth onPress={finish}>{replaying ? 'Done' : 'See today'}</Button>
       </Step>
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  card: {
-    backgroundColor: color.surfaceCard,
-    borderWidth: 1,
-    borderColor: color.borderSubtle,
-    borderRadius: radius.md,
-    paddingVertical: 16,
-    paddingHorizontal: 18,
-  },
-});

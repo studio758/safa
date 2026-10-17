@@ -1,19 +1,15 @@
-import { FlatList, Pressable, ScrollView, Text, View } from 'react-native';
 import { useEffect, useRef, useState } from 'react';
-import { Button } from '../ds/Button';
+import { FlatList, Pressable, Text, View } from 'react-native';
 import { Eyebrow } from '../ds/display';
-import { SegmentedControl, TextField, Toggle } from '../ds/forms';
 import { IconButton } from '../ds/IconButton';
-import { Wordmark } from '../ds/Wordmark';
 import { DAY_KEYS, FIRST_DAY, LAST_DAY, addDays, addMonths, clampKey, fromKey, inRange, longDate, monthOf, monthTitle, rowsFor, shortDate, weekdayShort } from '../data/calendar';
 import { CATEGORY } from '../data/editorial';
 import { DAY_KIND_COLOR, buildDay, eventTypeLabel, rankEvents } from '../data/engine';
 import { useSafa } from '../state/SafaState';
-import { color, font, radius, type } from '../theme/tokens';
-import { ListRow, ScreenTitle, Scroller, TAB_CONTENT, card } from './shared';
-import { FlatTile } from '../ds/almanac';
+import { color, font } from '../theme/tokens';
+import { ListRow, ScreenTitle, Scroller, TAB_CONTENT, card } from '../screens/shared';
 
-/** Monday-first week containing `key`. */
+/** The seven days (Monday first) of the week containing `key`. */
 function weekOf(key: string) {
   const dow = (fromKey(key).getDay() + 6) % 7;
   const start = addDays(key, -dow);
@@ -35,7 +31,7 @@ function DayCell({ k, selected, onPress }: { k: string; selected: boolean; onPre
   const { state: s } = useSafa();
   const sel = selected;
   const ok = inRange(k);
-  const kind = ok ? buildDay(k, s.hemi).kind : 'quiet';
+  const kind = ok ? buildDay(k, s.settings.hemisphere).kind : 'quiet';
   const fg = sel ? color.linen0 : k === s.today ? color.sage700 : color.textHeading;
   const dot = sel && kind !== 'quiet' ? color.linen0 : DAY_KIND_COLOR[kind];
   return (
@@ -55,7 +51,7 @@ function DayCell({ k, selected, onPress }: { k: string; selected: boolean; onPre
 }
 
 export function Almanac() {
-  const { state: s, showDay, selectDay, openObs, setMonth } = useSafa();
+  const { state: s, showDay, openObs, setMonth } = useSafa();
   const days = DAY_KEYS.filter(k => monthOf(k) === s.month);
 
   // The week strip is a paging list of weeks. Swiping moves the selected day to the
@@ -79,7 +75,7 @@ export function Almanac() {
     settled.current = idx;
     const dow = (fromKey(s.dayKey).getDay() + 6) % 7;
     const target = clampKey(addDays(start, dow));
-    selectDay(target);
+    showDay(target);
     setMonth(monthOf(target));
   };
 
@@ -148,87 +144,6 @@ export function Almanac() {
           />
         ));
       })}
-    </Scroller>
-  );
-}
-
-export function Journal() {
-  const { state: s, openJournal, showDay } = useSafa();
-  const saved = Object.keys(s.saved).filter(k => s.saved[k]).sort().map(k => buildDay(k, s.hemi));
-  return (
-    <Scroller contentStyle={TAB_CONTENT}>
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: 24 }}>
-        <ScreenTitle>Journal</ScreenTitle>
-        <Button size="sm" icon="pen" onPress={openJournal}>New entry</Button>
-      </View>
-
-      {saved.length > 0 ? (
-        <>
-          <View style={{ marginBottom: 12 }}><Eyebrow tone="sage">Saved Days</Eyebrow></View>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={{ marginHorizontal: -24, marginBottom: 32 }}
-            contentContainerStyle={{ paddingHorizontal: 24, gap: 10 }}
-          >
-            {saved.map(d => (
-              <Pressable
-                key={d.key}
-                accessibilityRole="button"
-                accessibilityLabel={`${d.date}: ${d.theme}`}
-                onPress={() => showDay(d.key)}
-                style={{ width: 150, borderWidth: 1, borderColor: color.borderSubtle, borderRadius: radius.lg, overflow: 'hidden', backgroundColor: color.surfaceCard }}
-              >
-                <FlatTile flat={d.flat} style={{ height: 90 }} />
-                <View style={{ paddingTop: 12, paddingHorizontal: 14, paddingBottom: 14, gap: 4 }}>
-                  <Text style={[type.caption, { color: color.textMuted }]}>{d.date}</Text>
-                  <Text style={{ ...font('display', 500, 15, 1.3), color: color.textHeading }}>{d.lead?.name ?? d.theme}</Text>
-                </View>
-              </Pressable>
-            ))}
-          </ScrollView>
-        </>
-      ) : null}
-
-      <View style={{ marginBottom: 4 }}><Eyebrow tone="mauve">Reflections</Eyebrow></View>
-      {s.entries.map((e, i) => (
-        <View key={`${e.date}-${s.entries.length - i}`} style={{ paddingVertical: 20, borderBottomWidth: 1, borderBottomColor: color.borderSubtle, gap: 8 }}>
-          <Text style={[type.caption, { color: color.textMuted }]}>{e.date}</Text>
-          <Text style={{ ...font('serifItalic', 400, 17, 1.5), color: color.textMauve }}>{e.prompt}</Text>
-          <Text style={{ ...font('serif', 400, 16, 1.7), color: color.textHeading }}>{e.text}</Text>
-        </View>
-      ))}
-    </Scroller>
-  );
-}
-
-export function You() {
-  const { state: s, setHemi, setRemind, setObsRemind, setName, replay } = useSafa();
-  return (
-    <Scroller contentStyle={[TAB_CONTENT, { flexGrow: 1 }]}>
-      <ScreenTitle style={{ marginBottom: 28 }}>You</ScreenTitle>
-      <View style={{ marginBottom: 28 }}>
-        <TextField label="Name" value={s.name} onChange={setName} placeholder="First name" />
-      </View>
-      <View style={{ marginBottom: 12 }}><Eyebrow tone="muted">Hemisphere</Eyebrow></View>
-      <SegmentedControl options={['Northern', 'Southern']} value={s.hemi} onChange={setHemi} />
-      <Text style={[type.caption, { color: color.textMuted, marginTop: 10, marginBottom: 28 }]}>
-        Seasons and nature notes follow the {s.hemi.toLowerCase()} hemisphere.
-      </Text>
-
-      <View style={{ marginBottom: 12 }}><Eyebrow tone="muted">Notifications</Eyebrow></View>
-      <View style={[card, { paddingVertical: 16, paddingHorizontal: 18, gap: 18 }]}>
-        <Toggle checked={s.remind} onChange={setRemind} label="Morning reminder" description="7:00 · silent" />
-        <View style={{ height: 1, backgroundColor: color.borderSubtle }} />
-        <Toggle checked={s.obsRemind} onChange={setObsRemind} label="Observances you follow" description="The evening before" />
-      </View>
-
-      <View style={{ height: 28 }} />
-      <Button variant="secondary" fullWidth icon="rotate-left" onPress={replay}>Replay welcome</Button>
-      <View style={{ flex: 1, minHeight: 40 }} />
-      <View style={{ alignItems: 'center', paddingTop: 24 }}>
-        <Wordmark size={24} tagline />
-      </View>
     </Scroller>
   );
 }

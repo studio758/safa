@@ -1,50 +1,47 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { ROW_BY_ID, addDays, clampKey, inRange, monthOf, shortDate, toKey } from '../data/calendar';
-import { SEED_ENTRIES, suggestionsFor, type CardStyleId, type JournalEntry } from '../data/content';
+import { ROW_BY_ID, addDays, clampKey, inRange, monthOf, toKey } from '../data/calendar';
+import { suggestionsFor, type CardStyleId } from '../data/content';
 import { buildDay, type DayView, type Hemisphere } from '../data/engine';
+import { KEYS, clearAllData, loadPersisted, writeJson } from '../lib/storage';
+import { DEFAULT_SETTINGS, type PracticeRecord, type Reflection, type Settings } from './schema';
 
-export type Tab = 'today' | 'almanac' | 'journal' | 'you';
 export type { Hemisphere };
 
 export type SafaConfig = {
-  /** Where the app opens: the welcome flow or straight onto Today. */
+  /** Where the app opens: the welcome flow or straight onto Today (review shortcut). */
   startScreen?: 'onboarding' | 'today';
   /** Override "today" ("YYYY/MM/DD"); defaults to the device date, clamped to the calendar's range. */
   today?: string;
 };
 
-/** What survives an app restart: the user's profile and their settings. */
-type Persisted = { name: string; registered: boolean; hemi: Hemisphere; remind: boolean; obsRemind: boolean };
-const STORE_KEY = 'safa.profile.v1';
-
 type State = {
-  /** False until the saved profile has been read, so the welcome flow never flashes. */
+  /** False until the saved data has been read from the device. */
   ready: boolean;
-  /** True once onboarding is finished; later launches go straight to the app. */
-  registered: boolean;
-  name: string;
-  screen: 'onboarding' | 'app';
+  /** Review shortcut (?start=today). Lets a session skip onboarding; never saved. */
+  skipOnboarding: boolean;
+  /** True while the welcome flow is opened again from Settings. */
+  replaying: boolean;
+  /** Onboarding page, 0–2. */
   step: number;
-  hemi: Hemisphere;
-  remind: boolean;
-  obsRemind: boolean;
-  tab: Tab;
+  name: string;
+  registered: boolean;
+  settings: Settings;
   /** The real current date, clamped to the calendar. */
   today: string;
   /** The day Today is showing. */
   dayKey: string;
-  /** The month the Almanac lists ("YYYY/MM"). */
+  /** The month the (hidden) Almanac lists ("YYYY/MM"). */
   month: string;
   /** 1 = day content visible, 0 = mid cross-fade between days. */
   fade: number;
-  done: Record<string, boolean>;
   saved: Record<string, boolean>;
+  reflections: Reflection[];
+  practices: Record<string, PracticeRecord>;
+  draft: string;
   learnOpen: boolean;
   journalOpen: boolean;
-  draft: string;
-  entries: JournalEntry[];
-  /** Calendar row shown in the observance page and greeting composer. */
+  // Observance and greeting state, kept for the preserved screens in src/legacy.
+  // Nothing in the Stage 1 interface opens them.
   obsId: number;
   obsOpen: boolean;
   obsDone: Record<string, boolean>;
@@ -63,35 +60,42 @@ function initialState({ startScreen = 'onboarding', today }: SafaConfig): State 
   const first = day.share?.event ?? day.events[0];
   return {
     ready: false,
-    registered: false,
-    name: '',
-    screen: startScreen === 'today' ? 'app' : 'onboarding',
+    skipOnboarding: startScreen === 'today',
+    replaying: false,
     step: 0,
-    hemi: 'Northern',
-    remind: true,
-    obsRemind: true,
-    tab: 'today',
+    name: '',
+    registered: false,
+    settings: DEFAULT_SETTINGS,
     today: t,
     dayKey: t,
     month: monthOf(t),
     fade: 1,
-    done: {},
     saved: {},
+    reflections: [],
+    practices: {},
+    draft: '',
     learnOpen: false,
     journalOpen: false,
-    draft: '',
-    entries: SEED_ENTRIES,
     obsId: first?.id ?? 1,
     obsOpen: false,
     obsDone: {},
     cal: {},
     greetOpen: false,
     cardStyle: 'lamp',
-    recipient: 'Ahmed',
+    recipient: '',
     note: '',
     toast: '',
     toastOn: false,
   };
+}
+
+const newId = () => `${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}`;
+
+/** Writes one slice of state. If the device refuses, the user is told rather than losing data silently. */
+function persist(key: string, value: unknown, onFail: (message: string) => void) {
+  writeJson(key, value).then(ok => {
+    if (!ok) onFail("Couldn't save on this device");
+  });
 }
 
 function useSafaStore(config: SafaConfig) {
@@ -105,49 +109,66 @@ function useSafaStore(config: SafaConfig) {
     setS(st => ({ ...st, ...patch }));
   }, []);
 
-  // Restore the saved profile once on launch. A returning user skips the welcome flow.
-  useEffect(() => {
-    let alive = true;
-    AsyncStorage.getItem(STORE_KEY)
-      .then(raw => {
-        if (!alive) return;
-        const saved = raw ? (JSON.parse(raw) as Partial<Persisted>) : {};
-        const registered = !!saved.registered;
-        set({
-          ready: true,
-          name: saved.name ?? '',
-          registered,
-          hemi: saved.hemi ?? 'Northern',
-          remind: saved.remind ?? true,
-          obsRemind: saved.obsRemind ?? true,
-          screen: config.startScreen === 'today' || registered ? 'app' : 'onboarding',
-        });
-      })
-      .catch(() => { if (alive) set({ ready: true }); });
-    return () => { alive = false; };
-  }, [set, config.startScreen]);
-
-  // Save the profile and settings whenever they change, once they have been restored.
-  const { ready, name, registered, hemi, remind, obsRemind } = s;
-  useEffect(() => {
-    if (!ready) return;
-    const data: Persisted = { name, registered, hemi, remind, obsRemind };
-    AsyncStorage.setItem(STORE_KEY, JSON.stringify(data)).catch(() => {});
-  }, [ready, name, registered, hemi, remind, obsRemind]);
-
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const dayTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   useEffect(() => () => { clearTimeout(toastTimer.current); clearTimeout(dayTimer.current); }, []);
 
-  const day = useMemo(() => buildDay(s.dayKey, s.hemi), [s.dayKey, s.hemi]);
-
-  const actions = useMemo(() => {
-    const get = () => ref.current;
-    const showToast = (msg: string) => {
+  const showToast = useCallback(
+    (msg: string) => {
       clearTimeout(toastTimer.current);
       set({ toast: msg, toastOn: true });
       toastTimer.current = setTimeout(() => set({ toastOn: false }), 2200);
+    },
+    [set],
+  );
+
+  // Read everything saved on the device once, at launch.
+  useEffect(() => {
+    let alive = true;
+    loadPersisted()
+      .then(data => {
+        if (!alive) return;
+        set({
+          ready: true,
+          name: data.profile.name,
+          registered: data.profile.registered,
+          settings: data.settings,
+          saved: data.saved,
+          reflections: data.reflections,
+          practices: data.practices,
+        });
+      })
+      .catch(() => {
+        if (alive) set({ ready: true });
+      });
+    return () => {
+      alive = false;
     };
+  }, [set]);
+
+  // Write each slice whenever it changes, once loading has finished.
+  const { ready, name, registered, settings, saved, reflections, practices } = s;
+  useEffect(() => {
+    if (ready) persist(KEYS.profile, { name, registered }, showToast);
+  }, [ready, name, registered, showToast]);
+  useEffect(() => {
+    if (ready) persist(KEYS.settings, settings, showToast);
+  }, [ready, settings, showToast]);
+  useEffect(() => {
+    if (ready) persist(KEYS.saved, saved, showToast);
+  }, [ready, saved, showToast]);
+  useEffect(() => {
+    if (ready) persist(KEYS.reflections, reflections, showToast);
+  }, [ready, reflections, showToast]);
+  useEffect(() => {
+    if (ready) persist(KEYS.practices, practices, showToast);
+  }, [ready, practices, showToast]);
+
+  const day = useMemo(() => buildDay(s.dayKey, s.settings.hemisphere), [s.dayKey, s.settings.hemisphere]);
+
+  const actions = useMemo(() => {
+    const get = () => ref.current;
+
     /** Fade the day out, swap it, fade it back in. */
     const goDay = (key: string) => {
       const k = clampKey(key);
@@ -156,33 +177,57 @@ function useSafaStore(config: SafaConfig) {
       clearTimeout(dayTimer.current);
       dayTimer.current = setTimeout(() => set({ dayKey: k, fade: 1 }), 200);
     };
+
     const prepareGreeting = (id: number) => {
       const row = ROW_BY_ID.get(id);
       return { obsId: id, note: row ? suggestionsFor(row)[0]?.text ?? '' : '', cardStyle: row?.share === 'yes' ? 'lamp' : 'linen' } as const;
     };
+
     return {
       showToast,
-      goDay,
       prevDay: () => goDay(addDays(get().dayKey, -1)),
       nextDay: () => goDay(addDays(get().dayKey, 1)),
       goToday: () => goDay(get().today),
-      showDay: (key: string) => { set({ tab: 'today', obsOpen: false, greetOpen: false }); goDay(key); },
+      showDay: (key: string) => goDay(key),
       setMonth: (month: string) => set({ month }),
-      nextStep: () => set(get().step < 3 ? { step: get().step + 1 } : { registered: true, screen: 'app', tab: 'today' }),
+
+      // Onboarding and profile
+      nextStep: () => {
+        const st = get();
+        if (st.step < 2) set({ step: st.step + 1 });
+        else set({ registered: true });
+      },
+      replay: () => set({ step: 0, replaying: true }),
+      /** Called when a replayed welcome flow closes, so the gate can apply normally again. */
+      endReplay: () => set({ replaying: false }),
       setName: (name: string) => set({ name }),
-      selectDay: (key: string) => goDay(key),
-      replay: () => set({ screen: 'onboarding', step: 0 }),
-      setHemi: (hemi: string) => set({ hemi: hemi as Hemisphere }),
-      setRemind: (remind: boolean) => set({ remind }),
-      setObsRemind: (obsRemind: boolean) => set({ obsRemind }),
-      setTab: (tab: Tab) => set({ tab }),
-      togglePractice: (key: string, v: boolean) => set({ done: { ...get().done, [key]: v } }),
+      setHemisphere: (hemisphere: Hemisphere) => set({ settings: { ...get().settings, hemisphere } }),
+
+      // Ritual practices (keyed by day and position, storing the title for history)
+      togglePractice: (key: string, title: string, v: boolean) => {
+        const next = { ...get().practices };
+        if (v) next[key] = { title, at: new Date().toISOString() };
+        else delete next[key];
+        set({ practices: next });
+      },
+
+      // Saved days
       toggleSave: () => {
         const st = get();
         const v = !st.saved[st.dayKey];
-        set({ saved: { ...st.saved, [st.dayKey]: v } });
-        showToast(v ? 'Day saved to your journal' : 'Removed from saved');
+        const next = { ...st.saved };
+        if (v) next[st.dayKey] = true;
+        else delete next[st.dayKey];
+        set({ saved: next });
+        showToast(v ? 'Day saved' : 'Removed from saved days');
       },
+      removeSaved: (key: string) => {
+        const next = { ...get().saved };
+        delete next[key];
+        set({ saved: next });
+      },
+
+      // Reflections
       openLearn: () => set({ learnOpen: true }),
       closeLearn: () => set({ learnOpen: false }),
       openJournal: () => set({ journalOpen: true }),
@@ -190,31 +235,58 @@ function useSafaStore(config: SafaConfig) {
       setDraft: (draft: string) => set({ draft }),
       saveEntry: (prompt: string) => {
         const st = get();
-        set({ entries: [{ date: shortDate(st.dayKey), prompt, text: st.draft.trim() }, ...st.entries], draft: '', journalOpen: false });
-        showToast('Saved to your journal');
+        const text = st.draft.trim();
+        if (!text) return;
+        const entry: Reflection = { id: newId(), dayKey: st.dayKey, prompt, text, createdAt: new Date().toISOString() };
+        set({ reflections: [entry, ...st.reflections], draft: '', journalOpen: false });
+        showToast('Reflection saved');
       },
+      deleteReflection: (id: string) => set({ reflections: get().reflections.filter(r => r.id !== id) }),
+
+      // Preserved observance and greeting state (hidden; see src/legacy).
       openObs: (id: number) => set({ ...prepareGreeting(id), obsOpen: true, learnOpen: false }),
       closeObs: () => set({ obsOpen: false, greetOpen: false }),
       toggleObsPractice: (key: string, v: boolean) => set({ obsDone: { ...get().obsDone, [key]: v } }),
       toggleCal: () => {
         const st = get();
-        const v = !st.cal[st.obsId];
-        set({ cal: { ...st.cal, [st.obsId]: v } });
-        showToast(v ? `${ROW_BY_ID.get(st.obsId)?.name ?? 'Observance'} added to your calendar` : 'Removed from calendar');
+        set({ cal: { ...st.cal, [st.obsId]: !st.cal[st.obsId] } });
       },
-      /** Open the composer, optionally for a specific calendar row (e.g. from Today's CTA). */
+      /** Open the composer, optionally for a specific calendar row. */
       openGreet: (id?: number) => set({ ...(id !== undefined ? prepareGreeting(id) : {}), greetOpen: true }),
       closeGreet: () => set({ greetOpen: false }),
       setCardStyle: (cardStyle: CardStyleId) => set({ cardStyle }),
       setRecipient: (recipient: string) => set({ recipient }),
       setNote: (note: string) => set({ note }),
-      shareGreet: () => {
-        const respectful = ROW_BY_ID.get(get().obsId)?.share !== 'yes';
-        set({ greetOpen: false });
-        showToast(`${respectful ? 'Message' : 'Greeting'} for ${get().recipient.trim() || 'someone dear'} is ready to share`);
+      // Sharing is not connected yet. The composer stays hidden, so this only closes it.
+      shareGreet: () => set({ greetOpen: false }),
+
+      /** Deletes everything this app has stored on the device, then returns to a fresh start. */
+      clearAll: async () => {
+        const ok = await clearAllData();
+        if (!ok) {
+          showToast("Couldn't clear data on this device");
+          return false;
+        }
+        set({
+          name: '',
+          registered: false,
+          replaying: false,
+          skipOnboarding: false,
+          step: 0,
+          settings: DEFAULT_SETTINGS,
+          saved: {},
+          reflections: [],
+          practices: {},
+          draft: '',
+          learnOpen: false,
+          journalOpen: false,
+          dayKey: get().today,
+          fade: 1,
+        });
+        return true;
       },
     };
-  }, [set]);
+  }, [set, showToast]);
 
   return { state: s, day, ...actions };
 }

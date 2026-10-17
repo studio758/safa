@@ -12,8 +12,8 @@ import { eventTypeLabel, flatForEvent, greetingModeFor, isFestive, isSolemn, pra
 import { useTween } from '../lib/useTween';
 import { useSafa } from '../state/SafaState';
 import { color, font, motion, radius, type, wrap } from '../theme/tokens';
-import type { ScrollViewInstance } from './shared';
-import { Scroller, card } from './shared';
+import type { ScrollViewInstance } from '../screens/shared';
+import { Scroller, card } from '../screens/shared';
 
 /** Full-screen page that slides in from the right (520ms, settle easing). */
 function SlideOver({ open, z, title, onBack, label, children }: { open: boolean; z: number; title: string; onBack: () => void; label: string; children: ReactNode }) {
@@ -72,7 +72,7 @@ export function ObservanceDetail({ bottomInset }: { bottomInset: number }) {
   return (
     <SlideOver open={s.obsOpen} z={30} title="Observance" onBack={closeObs} label="Observance detail">
       <Scroller ref={scroll} contentStyle={{ paddingTop: 8, paddingHorizontal: 24, paddingBottom: 48 + bottomInset }}>
-        <FlatTile flat={flatForEvent(row, seasonOf(row, s.hemi))} style={{ height: 220, borderRadius: radius.lg }} />
+        <FlatTile flat={flatForEvent(row, seasonOf(row, s.settings.hemisphere))} style={{ height: 220, borderRadius: radius.lg }} />
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginTop: 20, marginBottom: 10 }}>
           <Tag tone={tagTone}>{eventTypeLabel(row)}</Tag>
           <Text style={[type.caption, { color: color.textMuted, flexShrink: 1 }]}>{longDate(row.date)}{day ? ` · ${day}` : ''}</Text>

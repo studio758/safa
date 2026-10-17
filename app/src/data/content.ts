@@ -32,10 +32,3 @@ export function suggestionsFor(e: CalendarRow) {
   ];
   return list.filter((x): x is { label: string; text: string } => !!x);
 }
-
-export type JournalEntry = { date: string; prompt: string; text: string };
-
-export const SEED_ENTRIES: JournalEntry[] = [
-  { date: '12 Oct', prompt: 'What can I let settle today?', text: 'The kitchen table, mostly. And the conversation from Sunday.' },
-  { date: '9 Oct', prompt: 'Where did I notice the season today?', text: 'Cold air on the walk to the station. The plane trees have started turning.' },
-];
